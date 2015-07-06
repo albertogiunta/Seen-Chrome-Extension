@@ -18,5 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
     	localStorage.removeItem("search-str");
     	var lbl = document.getElementById("result");
     	lbl.innerHTML = str;
+    	str = escape(str);
+    	console.log(theMovieDb.search.getTv({"query":str}, successCB, errorCB));
     }
+
+    function successCB(data) {
+    	console.log("Success callback: " + data);
+    };
+
+    function errorCB(data) {
+    	console.log("Error callback: " + data);
+    };
 });

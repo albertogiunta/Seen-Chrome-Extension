@@ -29,3 +29,18 @@ function nonAnonymousFunction() {
 // e metterci le parentesi fa ritornare quello che ritorna la funzione (che non è a sua volta una funzione)
 // http://stackoverflow.com/questions/15255801/javascript-addeventlistener-function
 // http://stackoverflow.com/questions/593509/javascript-syntax-function-calls-and-using-parenthesis
+
+/*
+html5 storage
+*/
+// viene trattato come un array associativo (stile php, una mappa)
+// http://diveintohtml5.info/storage.html
+localStorage.setItem("name", variable);
+localStorage.getItem("name");
+localStorage.removeItem("name");
+
+/*
+accesso globale alle variabili
+*/
+// se un js viene inserito in un html, se ha variabili globali queste possono essere semplicemente usate dagli altri file
+// altrimenti prova con window.variablename
