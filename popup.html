@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Chrome Extension</title>
-	 <style type="text/css">
+   <title>Chrome Extension</title>
+   <script type="text/javascript" src="popup.js"></script>
+   <style type="text/css">
          body {
             width: 200px;
             height: 200px;
             overflow: hidden;
          }
-         </style>
+   </style>
 </head>
 <body>
-	<p id="search-tl">Search Tv Series</p>
-	<input type="text" name="search-tf">
-</body>
+   <p id="search-tl">Search Tv Series</p>
+   <input type="text" name="search-tf" id="search-tf">
+   <a id="search-btn" href="result.html">Click me</a>
+   <!-- <button id="search-btn">Search!</button> -->
+   <p id="result"></p>
+   </body>
 </html>
