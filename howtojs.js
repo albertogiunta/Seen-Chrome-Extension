@@ -44,3 +44,26 @@ accesso globale alle variabili
 */
 // se un js viene inserito in un html, se ha variabili globali queste possono essere semplicemente usate dagli altri file
 // altrimenti prova con window.variablename
+
+/*
+cambiare valore attributo html
+*/
+document.getElementById("elementId").setAttribute("attr", "value");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
