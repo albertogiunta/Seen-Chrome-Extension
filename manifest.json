@@ -8,5 +8,8 @@
         "default_icon": "icon.png",
         "default_popup": "popup.html"
     },
-    "permissions": []
+    
+    "permissions": [
+    	"storage"
+    ]
 }

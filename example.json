@@ -1,0 +1,44 @@
+{
+	"page": 1,
+	"results": [{
+		"backdrop_path": "/eSzpy96DwBujGFj0xMbXBcGcfxX.jpg",
+		"first_air_date": "2008-01-19",
+		"genre_ids": [18],
+		"id": 1396,
+		"original_language": "en",
+		"original_name": "Breaking Bad",
+		"overview": "Breaking Bad is an American crime drama television series created and produced by Vince Gilligan. Set and produced in Albuquerque, New Mexico, Breaking Bad is the story of Walter White, a struggling high school chemistry teacher who is diagnosed with inoperable lung cancer at the beginning of the series. He turns to a life of crime, producing and selling methamphetamine, in order to secure his family's financial future before he dies, teaming with his former student, Jesse Pinkman. Heavily serialized, the series is known for positioning its characters in seemingly inextricable corners and has been labeled a contemporary western by its creator.",
+		"origin_country": ["US"],
+		"poster_path": "/4yMXf3DW6oCL0lVPZaZM2GypgwE.jpg",
+		"popularity": 10.637581,
+		"name": "Breaking Bad",
+		"vote_average": 8.9,
+		"vote_count": 259
+	}],
+	"total_pages": 1,
+	"total_results": 1
+}
+
+
+
+{
+    "air_date": "2015-05-27",
+    "crew": [],
+    "episode_number": 1,
+    "guest_stars": [],
+    "name": "eps1.0_hellofriend.mov",
+    "overview": "Elliot is a cyber-security engineer by day and vigilante hacker by night, is recruited by a mysterious underground group to destroy the firm he's paid to protect. Elliot must decide how far he'll go to expose the forces he believes are running (and ruining) the world.",
+    "id": 1057663,
+    "production_code": null,
+    "season_number": 1,
+    "still_path": "/lNXkxjiVwWKXalBcDCpntXBBfOh.jpg",
+    "vote_average": 8.0,
+    "vote_count": 1
+}
+
+
+
+
+
+
+
