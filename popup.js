@@ -3,10 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
     var result = null;
     // se ci si trova sulla pagina principale (con ricerca serie tv)
     if (loc == "popup.html") {
+        buildUserList();
 	    var btn = document.getElementById("search-btn");
 	    btn.addEventListener("click", handler);
-	    document.getElementById("result").innerHTML = location.pathname.substring(1);
+	    // document.getElementById("result").innerHTML = location.pathname.substring(1);
 		
+        function buildUserList() {
+            var ul = document.createElement("ul");
+            chrome.storage.sync.get(null, function(items) {
+                var keys = Object.keys(items);
+                for (var i = 0; i < keys.length; i++) {
+                    var k = JSON.parse(items[keys[i]]);
+                    var li = document.createElement("li");
+                    li.setAttribute("data-tvsId", k.id);
+                    var node = document.createTextNode(k.name + " E" + k.nextEp + "x" + "S" + k.nextSeas + " (" + k.epName + ")");
+                    li.appendChild(node);
+                    ul.appendChild(li);
+                }
+            });
+            document.getElementById("user-list").appendChild(ul);
+        }
+
         function handler() {
             // prendo il contenuto del textfield
 			var content = document.getElementById("search-tf").value;
@@ -42,20 +59,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // se la ricerca ha avuto successo creo un elenco puntato con i link di aggiunta di ogni possibile serie
     function successSearch(data) {
-        // console.log("Success callback: " + data);
         result = JSON.parse(data);
         document.getElementById("result_list").appendChild(createList(createArray(result))); // crea la lista
         // aggiungo il listener per il click su ogni link
         var cta = document.getElementsByClassName("tvs-a")
         for (var i = 0; i < cta.length; i++) {
             cta[i].addEventListener("click", function() {
-                // var regex = /.+?(?=\ \(([0-9])\w{3}\))/;
-                // selectedName = regex.test(tempName) ? regex.exec(tempName) : tempName;
                 console.log(this);
                 selectedName = this.getAttribute("data-tvsname");
                 selectedId = this.getAttribute("data-tvsid");
-                console.log(selectedId);
-                console.log(selectedName);
                 addTvs();
             });
         }
@@ -104,27 +116,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addTvs() {
-        theMovieDb.tvEpisodes.getById({"id":selectedId, "season_number": 1, "episode_number": 1}, successAdd, errorAdd)
+        console.log(selectedId);
+        theMovieDb.tvEpisodes.getById({"id":selectedId, "season_number": 1, "episode_number": 1}, successAdd, errorAdd);
     }
 
     function successAdd(data) {
+        var valueName = selectedName + "-" + selectedId;
+
         result = JSON.parse(data);
-        var valueName = "next-" + selectedName + "-" + selectedId;
-        var save = valueName, selectedValues = JSON.stringify({'name':selectedName, 'id':selectedId});
+        console.log(result);
+        epNum = (result.episode_number < 10 ? '0' : '') + result.episode_number;
+        seasNum = (result.season_number < 10 ? '0' : '') + result.season_number;
+        var save = valueName, selectedValues = JSON.stringify({'name':selectedName, 'id':selectedId, 'nextEp': epNum, 'nextSeas': seasNum, 'epName': result.name});
+
         var jsonfile = {};
         jsonfile[save] = selectedValues;
-        // chrome.storage.sync.clear();
         chrome.storage.sync.set(jsonfile, function() {
             console.log("name saved as " + selectedName);
-            chrome.storage.sync.get(valueName, function(items) {
-            console.log(items);
-            });
-            // chrome.storage.sync.get(valueName, function(obj) {var a = JSON.parse(obj[valueName]); console.log("obj", a)});
         });
+        window.location.href="popup.html";
     }
 
     function errorAdd(data) {
-
     }
 });
 

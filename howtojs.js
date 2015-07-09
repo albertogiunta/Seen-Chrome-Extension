@@ -68,13 +68,16 @@ JSON manipulation
 */
 var parsed = JSON.parse(plainJson);
 var plain = JSON.stringify({'key': value, "anotherkey": anothervalue});
+var regex = \insert regex here\;
 
 /*
 string manipulation
 */
 string.substring(1);
 string.substring(0, 3);
-
+regex.test(text); // returns true or false
+regex.exec(text); // returns the matching pattern
+var regex = /.+?(?=\ \(([0-9])\w{3}\))/; "Breaking Bad (2008)" --> "Breaking Bad"
 
 /*
 CALLBACK STUFF
