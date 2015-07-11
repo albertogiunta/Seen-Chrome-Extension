@@ -1,156 +1,204 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var loc = location.pathname.substring(1);
-    var result = null;
-    // se ci si trova sulla pagina principale (con ricerca serie tv)
-    if (loc == "popup.html") {
-        buildUserList();
-	    var btn = document.getElementById("search-btn");
-	    btn.addEventListener("click", handler);
-	    // document.getElementById("result").innerHTML = location.pathname.substring(1);
-		
-        function buildUserList() {
-            var ul = document.createElement("ul");
-            chrome.storage.sync.get(null, function(items) {
-                var keys = Object.keys(items);
-                for (var i = 0; i < keys.length; i++) {
-                    var k = JSON.parse(items[keys[i]]);
-                    var li = document.createElement("li");
-                    li.setAttribute("data-tvsId", k.id);
-                    var node = document.createTextNode(k.name + " E" + k.nextEp + "x" + "S" + k.nextSeas + " (" + k.epName + ")");
-                    li.appendChild(node);
-                    ul.appendChild(li);
-                }
-            });
-            document.getElementById("user-list").appendChild(ul);
-        }
-
-        function handler() {
-            // prendo il contenuto del textfield
-			var content = document.getElementById("search-tf").value;
-            // se è stato inserito qualcosa
-            if (content) {
-    			document.getElementById("result").innerHTML = content;
-                document.getElementById("search-btn").setAttribute("href", "result.html");
-    			localStorage.setItem("search-str", content);
-
-            // se non è stato inserito niente
-            } else {
-                document.getElementById("result").innerHTML = "Please, insert st!";
-                document.getElementById("search-btn").setAttribute("href", "#");
-            }
-		}
-
-		// se ci si trova sulla pagina dei risultati di ricerca di una serie
-    } else if (loc == "result.html") {
-        var str = localStorage.getItem("search-str");
-        localStorage.removeItem("search-str");
-        // mostro i risultati per la stringa di ricerca
-        if (str) {
-            document.getElementById("title").innerHTML = "Results found for \"" + str + "\"";
-            str = escape(str);
-            json = theMovieDb.search.getTv({"query":str}, successSearch, errorSearch);
-        } else {
-            document.getElementById("title").innerHTML = "No results found!";
-        }
-    }
-    
-    var selectedName = null;
-    var selectedId = null;
-
-    // se la ricerca ha avuto successo creo un elenco puntato con i link di aggiunta di ogni possibile serie
-    function successSearch(data) {
-        result = JSON.parse(data);
-        document.getElementById("result_list").appendChild(createList(createArray(result))); // crea la lista
-        // aggiungo il listener per il click su ogni link
-        var cta = document.getElementsByClassName("tvs-a")
-        for (var i = 0; i < cta.length; i++) {
-            cta[i].addEventListener("click", function() {
-                console.log(this);
-                selectedName = this.getAttribute("data-tvsname");
-                selectedId = this.getAttribute("data-tvsid");
-                addTvs();
-            });
-        }
-    };
-
-    // se la ricerca non ha avuto successo
-    function errorSearch(data) {
-    	console.log("Error callback: " + data);
-    }; 
-
-    // rimappo il json prendendo solo i valori che mi servono (id, nome, anno)
-    function createArray(data) {
-        var tvs = [];
-        for (var i = 0; i < data.results.length; i++) {
-            tvs[i] = {};
-            tvs[i].id = "" + data.results[i].id;
-            tvs[i].name = data.results[i].name;
-            var date = data.results[i].first_air_date;
-            tvs[i].year = date ? " (" + date.substring(0,4) + ") " : "";
-        }
-        return tvs;
-    }
-
-    // crea la lista html 
-    function createList(data) {
-        var list = document.createElement("ul");
-        list.setAttribute("id", "tvs-ul");
-        for (var i = 0; i < data.length; i++) {
-            
-            var item = document.createElement("li");
-            item.setAttribute("class", "tvs-li")
-
-            var link = document.createElement("a");
-            link.setAttribute("class", "tvs-a");
-            link.setAttribute("data-tvsid", data[i].id);
-            link.setAttribute("data-tvsname", data[i].name);
-            link.setAttribute("href", "#");
-            var node = document.createTextNode("CTA");
-            link.appendChild(node);
-            
-            item.appendChild(document.createTextNode(data[i].name + data[i].year));
-            item.appendChild(link);
-            list.appendChild(item);
-        }
-        return list;
-    }
-
-    function addTvs() {
-        console.log(selectedId);
-        theMovieDb.tvEpisodes.getById({"id":selectedId, "season_number": 1, "episode_number": 1}, successAdd, errorAdd);
-    }
-
-    function successAdd(data) {
-        var valueName = selectedName + "-" + selectedId;
-
-        result = JSON.parse(data);
-        console.log(result);
-        epNum = (result.episode_number < 10 ? '0' : '') + result.episode_number;
-        seasNum = (result.season_number < 10 ? '0' : '') + result.season_number;
-        var save = valueName, selectedValues = JSON.stringify({'name':selectedName, 'id':selectedId, 'nextEp': epNum, 'nextSeas': seasNum, 'epName': result.name});
-
-        var jsonfile = {};
-        jsonfile[save] = selectedValues;
-        chrome.storage.sync.set(jsonfile, function() {
-            console.log("name saved as " + selectedName);
-        });
-        window.location.href="popup.html";
-    }
-
-    function errorAdd(data) {
-    }
+	buildUserList();
 });
 
+/*
+Builds the user tv series list
+*/
+function buildUserList() {
+	// building UL element for user's records
+	var ul = document.createElement('ul')
+	ul.setAttribute('id', 'user-tvs-ul');
+	document.getElementById('user-list').appendChild(ul);
+	insertUsersTvs(ul);
+}
+
+/*
+It gets all info saved in chrome.storage and then puts them in the previously created list, with buttons for incrementing or decrementing
+the last seen episode
+*/
+function insertUsersTvs(ul) {
+	//final result = Name E01xS01 (Ep name) + -
+	chrome.storage.sync.get(null, function(items) {
+		// getting the keys of saved elements (i.e.: 'Name-ID')
+		var keys = Object.keys(items);
+		for (var i = 0; i < keys.length; i++) {
+			var k = JSON.parse(items[keys[i]]);
+
+			var li = document.createElement('li');
+			li.setAttribute('data-tvs', k.name + '-' + k.id);
+			var node = document.createTextNode(k.name + ' E' + k.nextEp + 'x' + 'S' + k.nextSeas + ' (' + k.epName + ')');
+			li.appendChild(node);
+
+			var increment = document.createElement('a');
+			increment.setAttribute('class', 'incr-btn');
+			increment.setAttribute('href', '#');
+			var text = document.createTextNode('+');
+			increment.appendChild(text);
+			li.appendChild(increment);
+
+			var decrement = document.createElement('a');
+			decrement.setAttribute('class', 'decr-btn');
+			decrement.setAttribute('href', '#');
+			var text = document.createTextNode('-');
+			decrement.appendChild(text);
+			li.appendChild(decrement);
+
+			ul.appendChild(li);
+		}
+
+		// adding listeners for all episodes' + and -
+		// when clicked they should overwrite the current record and increment or decrement it
+		var incrBtns = document.getElementsByClassName('incr-btn');
+		var decrBtns = document.getElementsByClassName('decr-btn');
+
+		for (var i = 0; i < incrBtns.length; i++) {
+
+			incrBtns[i].addEventListener('click', function() {
+				// retrieving the selected tv series' data 
+				var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
+				var selectedTvsLi = this.parentNode;
+				chrome.storage.sync.get(chromeStorageKey, function(obj) {
+					var selectedData = getSelectedTvsData(chromeStorageKey, obj);
+					var name = selectedData.name;
+					var id = selectedData.id;
+					var currEp = selectedData.currEp;
+					var currSeas = selectedData.currSeas;
+					var currSeasNumEps = selectedData.currSeasNumEps;
+
+					// console.log(selectedTvsLi, chromeStorageKey, id, currEp, currSeas, currSeasNumEps);
+					// incrementEpisode(chromeStorageKey, currEp, currSeas, currSeasNumEps);
+					theMovieDb.tv.getById({"id":id}, 
+					function(data) {
+						incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps);
+					}, function(data) {
+						// do something if error occurs
+					});
+				});
+			});
+
+			decrBtns[i].addEventListener('click', function() {
+				// retrieving the selected tv series' data 
+				var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
+				var selectedTvsLi = this.parentNode;
+				chrome.storage.sync.get(dataTvs, function(obj) {
+					var selectedData = getSelectedTvsData(chromeStorageKey, obj);
+					var currEp = selectedData.currEp;
+					var currSeas = selectedData.currSeas;
 
 
+					decrementEpisode(decrBtns[i], chromeStorageKey, currEp, currSeas);
+				});
+			});
+		}
+	});
+}
 
+/*
+Fetches the tvs data (the one corresponding to the clicked '+' or '-') saved in chrome.storage.sync
+Returns currEp, 
+		currSeas, 
+		currSeasNumEps	
+*/
+function getSelectedTvsData(chromeStorageKey, obj) {
+	var plainJson = JSON.parse(obj[chromeStorageKey]);
+	var currEp = plainJson.nextEp;
+	var currSeas = plainJson.nextSeas;
+	var currSeasNumEps = plainJson.currSeasNumEps;
+	var id = plainJson.id;
+	var name = plainJson.name;
+	return {
+		name: name,
+		id: id,
+		currEp: currEp,
+		currSeas: currSeas,
+		currSeasNumEps: currSeasNumEps,
+	};
+}
 
+function incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps) {
+	var isEnded = false;
+	var isAired = false;
+	var res = JSON.parse(data);
+	var resCurrSeas = [];
+	for (var i = 0; i < res.seasons.length; i++) {
+		if (res.seasons[i].season_number == currSeas) {
+			resCurrSeas = res.seasons[i];
+			break;
+		}
+	}
+	
+	currEp = parseInt(currEp);
+	currSeas = parseInt(currSeas);
+	var nextEp = currEp;
+	var nextSeas = currSeas;
+	console.log(nextEp, nextSeas);
+	console.log(res.episode_count, res.number_of_seasons);
 
+	if (currEp + 1 <= resCurrSeas.episode_count) {
+		// same season / next ep
+		nextEp++;
+	} else if (currEp + 1 > resCurrSeas.episode_count && currSeas + 1 <= res.number_of_seasons) {
+		// next season / first ep
+		nextSeas++;
+		nextEp = 1;
+	} else {
+		isEnded = true;
+		console.log(isEnded);
+	}
 
+	if (!isEnded) {
+		theMovieDb.tvSeasons.getById({"id": id, "season_number": currSeas}, successSeasonData, errorSeasonData);
+	}
 
+	function successSeasonData (data) {
+		var res = JSON.parse(data);
+		for (var i = 0; i < res.episodes.length; i++) {
+			if (res.episodes[i].episode_number == nextEp) {
+				var airDate = Date.parse(res.episodes[i].air_date);
+				var currentDate = new Date();
+				if (airDate > currentDate) {
+					isAired = false;
+					console.log(isAired);
+					return;
+				}
+				var epName = res.episodes[i].name;
+				console.log("wut");
+				jsonfile = getJsonForChromeSTorage(name, id, nextEp, nextSeas, epName, currSeasNumEps);
+				chrome.storage.sync.set(jsonfile, function() {
+					console.log("changed");
+				});
+				window.location.href="popup.html";
+				return;
+			}
+		}
 
+	}
 
+	function errorSeasonData (data) {
+		console.log("error");
+		// do something if error occurs
+	}
+	// check if exists next in same season
+	// if yes take next one
+	// if not check if exists next season
+		// if yes take first episode
+		// if not tvs has ended
+}
 
-
-
-
+function getJsonForChromeSTorage (name, id, nextEp, nextSeas, epName, currSeasNumEps) {
+	// da cambiare
+	var valueName = name + "-" + id;
+	nextEp = (nextEp < 10 ? '0' : '') + nextEp;
+    nextSeas = (nextSeas < 10 ? '0' : '') + nextSeas;
+	var save = valueName, selectedValues = JSON.stringify({'name':name, 
+                                                               'id':id, 
+                                                               'nextEp': nextEp, 
+                                                               'nextSeas': nextSeas, 
+                                                               'epName': epName,
+                                                               'currSeasNumEps': currSeasNumEps});
+	var jsonfile = {};
+	jsonfile[save] = selectedValues;
+	console.log(jsonfile);
+	return jsonfile;
+}
