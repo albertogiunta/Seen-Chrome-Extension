@@ -59,21 +59,15 @@ function insertUsersTvs(ul) {
 				var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
 				var selectedTvsLi = this.parentNode;
 				chrome.storage.sync.get(chromeStorageKey, function(obj) {
-					var selectedData = getSelectedTvsData(chromeStorageKey, obj);
-					var name = selectedData.name;
-					var id = selectedData.id;
-					var currEp = selectedData.currEp;
-					var currSeas = selectedData.currSeas;
-					var currSeasNumEps = selectedData.currSeasNumEps;
-
-					// console.log(selectedTvsLi, chromeStorageKey, id, currEp, currSeas, currSeasNumEps);
-					// incrementEpisode(chromeStorageKey, currEp, currSeas, currSeasNumEps);
-					theMovieDb.tv.getById({"id":id}, 
-					function(data) {
-						incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps);
-					}, function(data) {
-						// do something if error occurs
-					});
+					var selData = getSelectedTvsData(chromeStorageKey, obj);
+					var isIncrement = true;
+					theMovieDb.tv.getById({"id":selData.id}, 
+											function(data) {
+												changeEpisode(isIncrement, data, chromeStorageKey, selData.name, selData.id, 
+																selData.currEp, selData.currSeas, selData.currSeasNumEps);
+											}, function(data) {
+												console.log("error");
+											});
 				});
 			});
 
@@ -81,13 +75,16 @@ function insertUsersTvs(ul) {
 				// retrieving the selected tv series' data 
 				var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
 				var selectedTvsLi = this.parentNode;
-				chrome.storage.sync.get(dataTvs, function(obj) {
-					var selectedData = getSelectedTvsData(chromeStorageKey, obj);
-					var currEp = selectedData.currEp;
-					var currSeas = selectedData.currSeas;
-
-
-					decrementEpisode(decrBtns[i], chromeStorageKey, currEp, currSeas);
+				chrome.storage.sync.get(chromeStorageKey, function(obj) {
+					var selData = getSelectedTvsData(chromeStorageKey, obj);
+					var isIncrement = false;
+					theMovieDb.tv.getById({"id":selData.id}, 
+											function(data) {
+												changeEpisode(isIncrement, data, chromeStorageKey, selData.name, selData.id, 
+																selData.currEp, selData.currSeas, selData.currSeasNumEps);
+											}, function(data) {
+												console.log("error");
+											});
 				});
 			});
 		}
@@ -116,7 +113,10 @@ function getSelectedTvsData(chromeStorageKey, obj) {
 	};
 }
 
-function incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps) {
+/*
+It checks if the next or previous episode is available and and if so, it gets and overwrite it in the corresponing chrome.storage.sync slot
+*/
+function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps) {
 	var isEnded = false;
 	var isAired = false;
 	var res = JSON.parse(data);
@@ -130,29 +130,67 @@ function incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, cu
 	
 	currEp = parseInt(currEp);
 	currSeas = parseInt(currSeas);
-	var nextEp = currEp;
-	var nextSeas = currSeas;
 	console.log(nextEp, nextSeas);
 	console.log(res.episode_count, res.number_of_seasons);
 
-	if (currEp + 1 <= resCurrSeas.episode_count) {
-		// same season / next ep
-		nextEp++;
-	} else if (currEp + 1 > resCurrSeas.episode_count && currSeas + 1 <= res.number_of_seasons) {
-		// next season / first ep
-		nextSeas++;
-		nextEp = 1;
-	} else {
-		isEnded = true;
-		console.log(isEnded);
+	var nums = updateEpSeasNumber(isIncrement, currEp, currSeas);
+	var nextEp = nums.nextEp;
+	var nextSeas = nums.nextSeas;
+	var hasEnded = nums.hasEnded;
+
+	if (!hasEnded) {
+		theMovieDb.tvSeasons.getById({"id": id, "season_number": nextSeas}, successSeasonData, errorSeasonData);
 	}
 
-	if (!isEnded) {
-		theMovieDb.tvSeasons.getById({"id": id, "season_number": currSeas}, successSeasonData, errorSeasonData);
+	/*
+	It changes the episode and season number whether an increment or decrement is wanted
+	*/
+	function updateEpSeasNumber(isIncrement, currEp, currSeas) {
+		var nextEp;
+		var nextSeas;
+		var hasEnded = false;
+		console.log(currEp, currSeas);
+		if (isIncrement) {
+			if (currEp + 1 <= resCurrSeas.episode_count) {
+				// same season / next ep
+				nextEp = currEp + 1;
+				nextSeas = currSeas;
+			} else if (currEp + 1 > resCurrSeas.episode_count && currSeas + 1 <= res.number_of_seasons) {
+				// next season / first ep
+				nextEp = 1;
+				nextSeas = currSeas + 1;
+			} else {
+				hasEnded = true;
+				console.log(hasEnded);
+			}
+		} else {
+			if (currEp - 1 > 0) {
+				// same season / next ep
+				nextEp = currEp - 1;
+				nextSeas = currSeas;
+			} else if (currEp - 1 == 0 && currSeas - 1 > 0) {
+				// next season / first ep
+				nextEp = "last";
+				nextSeas = currSeas - 1;
+			} else {
+				hasEnded = true;
+				console.log(hasEnded);
+			}
+		}
+
+		return {
+			nextEp: nextEp,
+			nextSeas: nextSeas,
+			hasEnded: hasEnded
+		}
 	}
 
+	/*
+	It sets the data in chrome.storage
+	*/
 	function successSeasonData (data) {
 		var res = JSON.parse(data);
+		nextEp = nextEp == "last" ? res.episodes.length : nextEp;
 		for (var i = 0; i < res.episodes.length; i++) {
 			if (res.episodes[i].episode_number == nextEp) {
 				var airDate = Date.parse(res.episodes[i].air_date);
@@ -163,7 +201,6 @@ function incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, cu
 					return;
 				}
 				var epName = res.episodes[i].name;
-				console.log("wut");
 				jsonfile = getJsonForChromeSTorage(name, id, nextEp, nextSeas, epName, currSeasNumEps);
 				chrome.storage.sync.set(jsonfile, function() {
 					console.log("changed");
@@ -172,31 +209,27 @@ function incrementEpisode(data, chromeStorageKey, name, id, currEp, currSeas, cu
 				return;
 			}
 		}
-
 	}
 
 	function errorSeasonData (data) {
 		console.log("error");
-		// do something if error occurs
 	}
-	// check if exists next in same season
-	// if yes take next one
-	// if not check if exists next season
-		// if yes take first episode
-		// if not tvs has ended
 }
 
+/*
+Utility function for getting all the data to inserti in chrome.storage in json format
+*/
 function getJsonForChromeSTorage (name, id, nextEp, nextSeas, epName, currSeasNumEps) {
 	// da cambiare
 	var valueName = name + "-" + id;
 	nextEp = (nextEp < 10 ? '0' : '') + nextEp;
     nextSeas = (nextSeas < 10 ? '0' : '') + nextSeas;
 	var save = valueName, selectedValues = JSON.stringify({'name':name, 
-                                                               'id':id, 
-                                                               'nextEp': nextEp, 
-                                                               'nextSeas': nextSeas, 
-                                                               'epName': epName,
-                                                               'currSeasNumEps': currSeasNumEps});
+                                                           'id':id, 
+                                                           'nextEp': nextEp, 
+                                                           'nextSeas': nextSeas, 
+                                                           'epName': epName,
+                                                           'currSeasNumEps': currSeasNumEps});
 	var jsonfile = {};
 	jsonfile[save] = selectedValues;
 	console.log(jsonfile);
