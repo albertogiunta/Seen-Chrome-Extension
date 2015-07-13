@@ -1,3 +1,6 @@
+mr robot = 62560
+br bad = 1396
+
 // search
 {
 	"page": 1,
@@ -19,7 +22,7 @@
 	"total_results": 1
 }
 
-
+// tv
 {
     "backdrop_path": "/v8Y9yurHuI7MujWQMd8iL3Gy4B5.jpg",
     "created_by": [],
@@ -222,8 +225,13 @@
     "vote_count": 1
 }
 
+SUBS
 
+http://www.opensubtitles.org/en/search/sublanguageid-ita/searchonlytvseries-on/season-01/episode-01/moviename-mr+robot
 
+TORRENT
+
+https://torrentz.eu/search?q=mr+robot+s01e02
 
 
 
