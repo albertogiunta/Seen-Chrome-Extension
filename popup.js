@@ -47,12 +47,12 @@ function insertUsersTvs(ul) {
 
 			var li = document.createElement('li');
 			li.setAttribute('data-tvs', k.id);
-			var node = document.createTextNode(k.name + ' E' + k.nextEp + 'x' + 'S' + k.nextSeas + ' (' + k.epName + ' ' + k.leftToSee + ' ' + k.status +  ')');
+			var node = document.createTextNode(k.name + ' E' + k.nextEp + 'x' + 'S' + k.nextSeas + 
+											' (' + k.epName + ' ' + k.leftToSee + ' ' + k.lastEpAirDate + ' ' + k.status + ')');
 			li.appendChild(node);
 
 			var increment = document.createElement('a');
 			increment.setAttribute('class', 'incr-btn');
-			increment.setAttribute('href', '#');
 			var text = document.createTextNode('+');
 			increment.appendChild(text);
 			li.appendChild(increment);
@@ -67,17 +67,26 @@ function insertUsersTvs(ul) {
 			var modName = k.name.replace(/\s+/g, '+').toLowerCase();
 			var sublink = document.createElement('a');
 			sublink.setAttribute('class', 'link-btn');
-			sublink.setAttribute('href', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-' + k.nextSeas + '/episode-' + k.nextEp + '/moviename-' + modName);
  			var text = document.createTextNode('Subs');
  			sublink.appendChild(text);
  			li.appendChild(sublink);
 
 			var torrlink = document.createElement('a');
 			torrlink.setAttribute('class', 'link-btn');
-			torrlink.setAttribute('href', 'https://torrentz.eu/search?q=' + modName + '+s' + k.nextSeas + 'e' + k.nextEp);
  			var text = document.createTextNode('Torr');
  			torrlink.appendChild(text);
  			li.appendChild(torrlink);
+
+ 			console.log(k.finishedSeas, "    cazziwow");
+			if (k.lastEpAirDate == null && k.finishedSeas != true) {
+				increment.setAttribute('href', '#');
+				sublink.setAttribute('href', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-' + k.nextSeas + '/episode-' + k.nextEp + '/moviename-' + modName);
+				torrlink.setAttribute('href', 'https://torrentz.eu/search?q=' + modName + '+s' + k.nextSeas + 'e' + k.nextEp);
+			} else {
+				increment.setAttribute('data-disabled', true);
+				sublink.setAttribute('data-disabled', true);
+				torrlink.setAttribute('data-disabled', true);
+			}
 
 			ul.appendChild(li);
 		}
@@ -91,8 +100,11 @@ function insertUsersTvs(ul) {
 		var linkBtns = document.getElementsByClassName('link-btn');
 		var j = -1;
 		for (var i = 0; i < incrBtns.length; i++) {
-
-			incrBtns[i].addEventListener('click', changeEpHandler);
+			if (!incrBtns[i].getAttribute('data-disabled')) {
+				incrBtns[i].addEventListener('click', changeEpHandler);
+				linkBtns[++j].addEventListener('click', linkHandler);
+				linkBtns[++j].addEventListener('click', linkHandler);
+			}
 			decrBtns[i].addEventListener('click', changeEpHandler);
 
 			function changeEpHandler () {
@@ -104,15 +116,15 @@ function insertUsersTvs(ul) {
 					theMovieDb.tv.getById({"id":selData.id}, 
 											function(data) {
 												changeEpisode(isIncrement, data, chromeStorageKey, selData.name, selData.id, 
-																selData.currEp, selData.currSeas, selData.currSeasNumEps, selData.leftToSee, selData.status);
+																selData.currEp, selData.currSeas, selData.epName, selData.currSeasNumEps, 
+																selData.leftToSee, selData.lastEpAirDate, selData.status, selData.finishedSeas);
 											}, function(data) {
 												console.log("error");
 											});
 				});
 			}
 
-			linkBtns[++j].addEventListener('click', linkHandler);
-			linkBtns[++j].addEventListener('click', linkHandler);
+			
 
 			function linkHandler () {
 				chrome.tabs.create({active: true, url: this.href});
@@ -133,24 +145,30 @@ function getSelectedTvsData(chromeStorageKey, obj) {
 	var id = plainJson.id;
 	var currEp = plainJson.nextEp;
 	var currSeas = plainJson.nextSeas;
+	var epName = plainJson.epName;
 	var currSeasNumEps = plainJson.currSeasNumEps;
 	var leftToSee = plainJson.leftToSee;
+	var lastEpAirDate = plainJson.lastEpAirDate;
 	var status = plainJson.status;
+	var finishedSeas = plainJson.finishedSeas;
 	return {
 		name: name,
 		id: id,
 		currEp: currEp,
 		currSeas: currSeas,
+		epName: epName,
 		currSeasNumEps: currSeasNumEps,
 		leftToSee: leftToSee,
-		status: status
+		lastEpAirDate: lastEpAirDate,
+		status: status,
+		finishedSeas: finishedSeas
 	};
 }
 
 /*
 It checks if the next or previous episode is available and and if so, it gets and overwrite it in the corresponing chrome.storage.sync slot
 */
-function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, currSeas, currSeasNumEps, leftToSee, status) {
+function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, currSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, finishedSeas) {
 	var isEnded = false;
 	var isAired = false;
 	var res = JSON.parse(data);
@@ -173,6 +191,11 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 
 	if (!hasEnded) {
 		theMovieDb.tvSeasons.getById({"id": id, "season_number": nextSeas}, successSeasonData, errorSeasonData);
+	} else {
+		jsonfile = getJsonForChromeSTorage(name, id, currEp, currSeas, '', currSeasNumEps, leftToSee, lastEpAirDate, status, hasEnded);
+		chrome.storage.sync.set(jsonfile, function() {});
+		window.location.href="popup.html";
+		return;
 	}
 
 	/*
@@ -227,21 +250,25 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 			if (res.episodes[i].episode_number == nextEp) {
 				var airDate = Date.parse(res.episodes[i].air_date);
 				var currentDate = new Date();
-				if (airDate > currentDate) {
-					isAired = false;
-					console.log(isAired);
-					return;
-				}
 				var epName = res.episodes[i].name;
 				var leftToSee = 0;
-				for (var j = i; j < res.episodes.length; j++) {
-					var airDate = Date.parse(res.episodes[j].air_date);
-					if (airDate > currentDate) {
-						break;
+				var lastEpAirDate = '';
+				if (airDate > currentDate) {
+					isAired = false;
+					lastEpAirDate = res.episodes[i].air_date;
+					leftToSee = null;
+				} else {
+					lastEpAirDate = null;
+					for (var j = i; j < res.episodes.length; j++) {
+						var airDate = Date.parse(res.episodes[j].air_date);
+						if (airDate > currentDate) {
+							break;
+						}
+						leftToSee++;
 					}
-					leftToSee++;
 				}
-				jsonfile = getJsonForChromeSTorage(name, id, nextEp, nextSeas, epName, currSeasNumEps, leftToSee, status);
+				jsonfile = getJsonForChromeSTorage(name, id, nextEp, nextSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, false);
+				console.log(jsonfile);
 				chrome.storage.sync.set(jsonfile, function() {});
 				window.location.href="popup.html";
 				return;
@@ -257,7 +284,7 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 /*
 Utility function for getting all the data to inserti in chrome.storage in json format
 */
-function getJsonForChromeSTorage (name, id, nextEp, nextSeas, epName, currSeasNumEps, leftToSee, status) {
+function getJsonForChromeSTorage (name, id, nextEp, nextSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, finishedSeas) {
 	// da cambiare
 	nextEp = (nextEp < 10 ? '0' : '') + nextEp;
     nextSeas = (nextSeas < 10 ? '0' : '') + nextSeas;
@@ -268,7 +295,9 @@ function getJsonForChromeSTorage (name, id, nextEp, nextSeas, epName, currSeasNu
                                                            'epName': epName,
                                                            'currSeasNumEps': currSeasNumEps,
                                                        	   'leftToSee': leftToSee,
-                                                       	   'status': status});
+                                                       	   'lastEpAirDate': lastEpAirDate,
+                                                       	   'status': status,
+                                                       	   'finishedSeas': finishedSeas});
 	var jsonfile = {};
 	jsonfile[save] = selectedValues;
 	return jsonfile;

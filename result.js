@@ -121,7 +121,9 @@ function successAdd(data) {
                                                            'epName': result.name,
                                                            'currSeasNumEps': currSeasNumEps,
                                                            'leftToSee': leftToSee,
-                                                           'status': status});
+                                                           'lastEpAirDate': null,
+                                                           'status': status,
+                                                           'finishedSeas': false});
 
     var jsonfile = {};
     jsonfile[save] = selectedValues;
