@@ -1,0 +1,14 @@
+ body {
+    width: 400px;
+    height: 300px;
+    margin: 10px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+/* erase lines in table borders */
+.overflow-scroll {
+	overflow: hidden;
+	margin-bottom: 10px;
+}

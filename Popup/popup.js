@@ -1,24 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 	buildUserList();
-	var btn = document.getElementById("search-btn");
-	btn.addEventListener("click", handler);
 });
-
-/*
-
-*/
-function handler() {
-	var content = document.getElementById("search-tf").value;
-	// if something was insertend in the search field
-    if (content) {
-		document.getElementById("result").innerHTML = content;
-        document.getElementById("search-btn").setAttribute("href", "result.html");
-		localStorage.setItem("search-str", content);
-    } else {
-        document.getElementById("result").innerHTML = "Please, insert st!";
-        document.getElementById("search-btn").setAttribute("href", "#");
-    }
-}
 
 /*
 Builds the user tv series list
@@ -31,7 +13,6 @@ function buildUserList() {
 	insertUsersTvs(ul);
 }
 
-
 /*
 It gets all info saved in chrome.storage and then puts them in the previously created list, with buttons for incrementing or decrementing
 the last seen episode
@@ -43,52 +24,84 @@ function insertUsersTvs(ul) {
 		var keys = Object.keys(items);
 		for (var i = 0; i < keys.length; i++) {
 			var k = JSON.parse(items[keys[i]]);
-			console.log(k);
 
-			var li = document.createElement('li');
-			li.setAttribute('data-tvs', k.id);
-			var node = document.createTextNode(k.name + ' E' + k.nextEp + 'x' + 'S' + k.nextSeas + 
-											' (' + k.epName + ' ' + k.leftToSee + ' ' + k.lastEpAirDate + ' ' + k.status + ')');
-			li.appendChild(node);
+			k.lastEpAirDate = !k.lastEpAirDate ? " " : k.lastEpAirDate;
+			k.leftToSee = !k.leftToSee ? " " : k.leftToSee;
+			
+			var main = document.getElementById('main');
 
-			var increment = document.createElement('a');
-			increment.setAttribute('class', 'incr-btn');
-			var text = document.createTextNode('+');
-			increment.appendChild(text);
-			li.appendChild(increment);
+			var container = document.createElement('div');
+			container.setAttribute('class', 'flex mb1');
+			container.setAttribute('data-tvs', k.id);
+			main.appendChild(container);
 
-			var decrement = document.createElement('a');
-			decrement.setAttribute('class', 'decr-btn');
-			decrement.setAttribute('href', '#');
-			var text = document.createTextNode('-');
-			decrement.appendChild(text);
-			li.appendChild(decrement);
+				var backbtn = document.createElement('button'); 
+				backbtn.setAttribute('class', 'btn rounded-left white bg-blue decr-btn');
+				backbtn.innerHTML = '&#60';
+				backbtn.addEventListener('click', function() {
+					window.location.href = "#"
+				});
+				container.appendChild(backbtn);
 
-			var modName = k.name.replace(/\s+/g, '+').toLowerCase();
-			var sublink = document.createElement('a');
-			sublink.setAttribute('class', 'link-btn');
- 			var text = document.createTextNode('Subs');
- 			sublink.appendChild(text);
- 			li.appendChild(sublink);
+				var maindiv = document.createElement('div');
+				maindiv.setAttribute('class', 'overflow-scroll flex-auto overflow-hidden bg-white rounded p0');
+				container.appendChild(maindiv);
+				
+					var pname = document.createElement('p');
+					pname.setAttribute('class', 'center h3 pb0.4 m0');
+					pname.innerHTML = k.name;
+					maindiv.appendChild(pname);
 
-			var torrlink = document.createElement('a');
-			torrlink.setAttribute('class', 'link-btn');
- 			var text = document.createTextNode('Torr');
- 			torrlink.appendChild(text);
- 			li.appendChild(torrlink);
+					var pnext = document.createElement('p');
+					pnext.setAttribute('class', 'center h5 m0');
+					pnext.innerHTML = 'Next to see: <b>' + 'E' + k.nextEp + 'x' + 'S' + k.nextSeas + '</b> <i>' + k.epName + '</i>';
+					maindiv.appendChild(pnext);
 
- 			console.log(k.finishedSeas, "    cazziwow");
-			if (k.lastEpAirDate == null && k.finishedSeas != true) {
-				increment.setAttribute('href', '#');
-				sublink.setAttribute('href', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-' + k.nextSeas + '/episode-' + k.nextEp + '/moviename-' + modName);
-				torrlink.setAttribute('href', 'https://torrentz.eu/search?q=' + modName + '+s' + k.nextSeas + 'e' + k.nextEp);
+					var pleft = document.createElement('p');
+					pleft.setAttribute('class', 'center h6 m0');
+					pleft.innerHTML = '(<b>' + k.leftToSee + '</b> ep. left to see in this season)';
+					maindiv.appendChild(pleft);
+
+					var plinks = document.createElement('p');
+					plinks.setAttribute('class', 'center pb0 mb0 h6');
+					maindiv.appendChild(plinks);
+
+						
+						var sub = document.createElement('a');
+						sub.setAttribute('class', 'btn button-narrow link-btn');
+						sub.innerHTML = 'Subtitles';
+						plinks.appendChild(sub);
+
+						var torrent = document.createElement('a');
+						torrent.setAttribute('class', 'btn button-narrow link-btn');
+						torrent.innerHTML = 'Torrent';
+						plinks.appendChild(torrent);
+
+						var streaming = document.createElement('a');
+						streaming.setAttribute('class', 'btn button-narrow link-btn');
+						streaming.setAttribute('href', '#');
+						streaming.innerHTML = 'Streaming';
+						plinks.appendChild(streaming);
+
+				var nextbtn = document.createElement('button'); 
+				nextbtn.setAttribute('class', 'btn rounded-right white bg-blue incr-btn');
+				nextbtn.innerHTML = '&#62';
+				container.appendChild(nextbtn);
+			
+			console.log(k.lastEpAirDate, k.finishedSeas);
+
+			if (k.lastEpAirDate == " " && k.finishedSeas == false) {
+				var modName = k.name.replace(/\s+/g, '+').toLowerCase();
+				nextbtn.setAttribute('href', '#');
+				sub.setAttribute('href', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-' + k.nextSeas + '/episode-' + k.nextEp + '/moviename-' + modName);
+				torrent.setAttribute('href', 'https://torrentz.eu/search?q=' + modName + '+s' + k.nextSeas + 'e' + k.nextEp);
+				streaming.setAttribute('href', '#');
 			} else {
-				increment.setAttribute('data-disabled', true);
-				sublink.setAttribute('data-disabled', true);
-				torrlink.setAttribute('data-disabled', true);
+				nextbtn.setAttribute('data-disabled', true);
+				sub.setAttribute('data-disabled', true);
+				torrent.setAttribute('data-disabled', true);
+				streaming.setAttribute('data-disabled', true);
 			}
-
-			ul.appendChild(li);
 		}
 
 
@@ -109,7 +122,7 @@ function insertUsersTvs(ul) {
 
 			function changeEpHandler () {
 				var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
-				var isIncrement = this.getAttribute('class') == 'incr-btn' ? true : false;
+				var isIncrement = this.className.split(" ").indexOf('incr-btn') > 1 ? true : false;
 				var selectedTvsLi = this.parentNode;
 				chrome.storage.sync.get(chromeStorageKey, function(obj) {
 					var selData = getSelectedTvsData(chromeStorageKey, obj);
@@ -123,8 +136,6 @@ function insertUsersTvs(ul) {
 											});
 				});
 			}
-
-			
 
 			function linkHandler () {
 				chrome.tabs.create({active: true, url: this.href});
@@ -194,7 +205,7 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 	} else {
 		jsonfile = getJsonForChromeSTorage(name, id, currEp, currSeas, '', currSeasNumEps, leftToSee, lastEpAirDate, status, hasEnded);
 		chrome.storage.sync.set(jsonfile, function() {});
-		window.location.href="popup.html";
+		window.location.href="/Popup/popup.html";
 		return;
 	}
 
@@ -270,7 +281,7 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 				jsonfile = getJsonForChromeSTorage(name, id, nextEp, nextSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, false);
 				console.log(jsonfile);
 				chrome.storage.sync.set(jsonfile, function() {});
-				window.location.href="popup.html";
+				window.location.href="/Popup/popup.html";
 				return;
 			}
 		}

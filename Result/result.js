@@ -1,18 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
-	var srcStr = localStorage.getItem("search-str");
-	localStorage.removeItem("search-str");
-	if (srcStr) {
-	    document.getElementById("title").innerHTML = "Results found for \"" + srcStr + "\"";
-	    srcStr = escape(srcStr);
-	    json = theMovieDb.search.getTv({"query":srcStr}, successSearch, errorSearch);
-	} else {
-	    document.getElementById("title").innerHTML = "No results found!";
-	}
+    var btn = document.getElementById("search-btn");
+    btn.addEventListener('click', function() {
+        var input =  document.getElementById('search-input');
+        var srcStr = input.value;
+         input.focus();
+         input.value = "";
+    	if (srcStr) {
+    	    document.getElementById("title").innerHTML = "Results found for \"" + srcStr + "\"";
+    	    srcStr = escape(srcStr);
+    	    json = theMovieDb.search.getTv({"query":srcStr}, successSearch, errorSearch);
+    	} else {
+    	    document.getElementById("title").innerHTML = "No results found!";
+    	}
+    });
+    document.getElementById('back-btn').addEventListener('click', function() {
+        window.location.href="/Popup/popup.html";
+    }); 
 });
+
 
 function successSearch(data) {
     var res = JSON.parse(data);
-    document.getElementById("result_list").appendChild(createList(createArray(res))); // creating the result list
+    var tbody = document.getElementsByTagName("tbody")[0];
+    createList(createArray(res), tbody); // creating the result list
     // adding the listener for every "add to collection" button
     var cta = document.getElementsByClassName("tvs-a")
     for (var i = 0; i < cta.length; i++) {
@@ -28,7 +38,6 @@ function errorSearch(data) {
 	console.log("Error callback: " + data);
 }; 
 
-// rimappo il json prendendo solo i valori che mi servono (id, nome, anno)
 /*
 Rimapping the json and only getting useful values (id, name, year)
 */
@@ -47,27 +56,32 @@ function createArray(data) {
 /* 
 Creating html list
 */
-function createList(data) {
-    var list = document.createElement("ul");
-    list.setAttribute("id", "tvs-ul");
+function createList(data, tbody) {
     for (var i = 0; i < data.length; i++) {
-        
-        var item = document.createElement("li");
-        item.setAttribute("class", "tvs-li")
+       
+        var row =  document.createElement("tr");
 
-        var link = document.createElement("a");
-        link.setAttribute("class", "tvs-a");
-        link.setAttribute("data-tvsid", data[i].id);
-        link.setAttribute("data-tvsname", data[i].name);
-        link.setAttribute("href", "#");
-        var node = document.createTextNode("CTA");
-        link.appendChild(node);
-        
-        item.appendChild(document.createTextNode(data[i].name + data[i].year));
-        item.appendChild(link);
-        list.appendChild(item);
+        var link = document.createElement("td")
+        var addLink = document.createElement("a");
+        addLink.setAttribute("class", "tvs-a");
+        addLink.setAttribute("data-tvsid", data[i].id);
+        addLink.setAttribute("data-tvsname", data[i].name);
+        addLink.setAttribute("href", "#");
+        addLink.appendChild(document.createTextNode("+"));
+        link.appendChild(addLink);
+
+        var name = document.createElement("td");
+        name.appendChild(document.createTextNode(data[i].name));
+
+        var year = document.createElement("td");
+        year.appendChild(document.createTextNode(data[i].year));
+
+        row.appendChild(link);
+        row.appendChild(name);
+        row.appendChild(year);
+
+        tbody.appendChild(row);
     }
-    return list;
 }
 
 /*
@@ -128,7 +142,7 @@ function successAdd(data) {
     var jsonfile = {};
     jsonfile[save] = selectedValues;
     chrome.storage.sync.set(jsonfile, function() {});
-    window.location.href="popup.html";
+    window.location.href="/Popup/popup.html";
 }
 
 function errorAdd(data) {

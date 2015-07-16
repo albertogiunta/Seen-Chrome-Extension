@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Result page</title>
+	<script type="text/javascript" src="/lib/themoviedb.js"></script>
+	<script type="text/javascript" src="/Result/result.js"></script>
+	<link href="http://d2v52k3cl9vedd.cloudfront.net/basscss/7.0.0/basscss.min.css" rel="stylesheet">
+   <link rel="stylesheet" type="text/css" href="/Result/result.css" media="screen"/>
+</head>
+<body>
+
+   <div class="flex mb2">
+      <button id="back-btn" class="btn rounded-left black bg-silver">Back</button>
+      <label for="search-input" class="hide">Search</label>
+      <input type="search" id="search-input" class="flex-auto m0 field not-rounded"
+      placeholder="Search" autofocus>
+      <button id="search-btn" class="btn rounded-right border-left black bg-silver">Go</button>
+   </div>
+   
+	<p id="title" class="h3"></p>
+   <div class="overflow-scroll">
+      <table class="table-light overflow-hidden bg-white border rounded">
+         <thead class="bg-darken-1">
+            <tr>
+               <th></th> <th>Name</th> <th>Year</th>
+            </tr>
+         </thead>
+         <tbody>
+         </tbody>
+      </table>
+   </div>
+</body>
+</html>
