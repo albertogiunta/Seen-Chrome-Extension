@@ -1,5 +1,5 @@
  body {
-    width: 500px;
+    width: 400px;
     height: 300px;
     margin: 10px;
     overflow: hidden;
@@ -11,4 +11,33 @@
 .overflow-scroll {
 	overflow: hidden;
 	margin-bottom: 10px;
+}
+
+#search-input {
+	margin: 0 0.5px 0 0.6px !important;
+}
+
+input:focus {
+    outline: none !important;
+	box-shadow: 0 0 0 0 #fff !important;
+	border-color: #71C0F9 !important;
+}
+
+.iconsvg,
+.im {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: block;
+  margin: auto;
+  fill: #525151;
+}
+.iconsvg:after,
+.im:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
