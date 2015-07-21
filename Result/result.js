@@ -4,20 +4,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var btn = document.getElementById("search-btn");
     btn.addEventListener('click', function() {
-        var input =  document.getElementById('search-input');
-        var srcStr = input.value;
-         input.focus();
-         input.value = "";
-    	if (srcStr) {
-    	    document.getElementById("title").innerHTML = "Results found for \"" + srcStr + "\"";
-    	    srcStr = escape(srcStr);
-            var main = document.getElementById('main');
-            while (main.firstChild) main.removeChild(main.firstChild);
-    	    json = theMovieDb.search.getTv({"query":srcStr}, successSearch, errorSearch);
-    	} else {
-    	    document.getElementById("title").innerHTML = "No results found!";
-    	}
+       doClick();
     });
+
+    var enter = document.getElementById('search-input');
+    enter.addEventListener('keypress', function() {
+        if (event.keyCode == 13) {
+            doClick();
+        } 
+    });
+
+    document.onkeydown = function() {
+        if (event.keyCode == 27) {
+            document.getElementById('search-input').blur();
+        }
+    };
+
+
+    function doClick() {
+        var input =  document.getElementById('search-input');
+        notEscsrcStr = input.value;
+        input.focus();
+        input.value = "";
+        srcStr = escape(notEscsrcStr);
+        var main = document.getElementById('main');
+        while (main.firstChild) main.removeChild(main.firstChild);
+        json = theMovieDb.search.getTv({"query":srcStr}, successSearch, errorSearch);
+    }
+
     document.getElementById('back-btn').addEventListener('click', function() {
         window.location.href="/Popup/popup.html";
     }); 
@@ -27,38 +41,43 @@ document.addEventListener('DOMContentLoaded', function() {
 function successSearch(data) {
     var res = JSON.parse(data);
 
-    var table = document.createElement('table');
-    table.setAttribute('class', 'table-light overflow-hidden bg-white border rounded');
+    if (res.results.length > 0) {
+        document.getElementById("title").innerHTML = res.results.length + " results found for \"" + notEscsrcStr + "\"";
+        var table = document.createElement('table');
+        table.setAttribute('class', 'table-light overflow-hidden bg-white rounded');
 
-        var thead = document.createElement('thead');
-        thead.setAttribute('class', 'bg-darken-1');
+            var thead = document.createElement('thead');
+            thead.setAttribute('class', '');
 
-            var tr = document.createElement('tr');
-                var th1 = document.createElement('th');
-                var th2 = document.createElement('th');
-                th2.innerHTML = 'Name';
-                var th3 = document.createElement('th');
-                th3.innerHTML = 'Year';
-        var tbody = document.createElement('tbody');
+                var tr = document.createElement('tr');
+                    var th1 = document.createElement('th');
+                    var th2 = document.createElement('th');
+                    th2.innerHTML = 'Name';
+                    var th3 = document.createElement('th');
+                    th3.innerHTML = 'Year';
+            var tbody = document.createElement('tbody');
 
-    var maintablediv = document.getElementById('main');
-    maintablediv.appendChild(table);
-        table.appendChild(thead);
-            thead.appendChild(tr);
-                tr.appendChild(th1);
-                tr.appendChild(th2);
-                tr.appendChild(th3);
-        table.appendChild(tbody);
+        var maintablediv = document.getElementById('main');
+        maintablediv.appendChild(table);
+            table.appendChild(thead);
+                thead.appendChild(tr);
+                    tr.appendChild(th1);
+                    tr.appendChild(th2);
+                    tr.appendChild(th3);
+            table.appendChild(tbody);
 
-    createList(createArray(res), tbody); // creating the result list
-    // adding the listener for every "add to collection" button
-    var cta = document.getElementsByClassName("tvs-a")
-    for (var i = 0; i < cta.length; i++) {
-        cta[i].addEventListener("click", function() {
-            selectedName = this.getAttribute("data-tvsname");
-            selectedId = this.getAttribute("data-tvsid");
-            addTvs();
-        });
+        createList(createArray(res), tbody); // creating the result list
+        // adding the listener for every "add to collection" button
+        var cta = document.getElementsByClassName("tvs-a")
+        for (var i = 0; i < cta.length; i++) {
+            cta[i].addEventListener("click", function() {
+                selectedName = this.getAttribute("data-tvsname");
+                selectedId = this.getAttribute("data-tvsid");
+                addTvs();
+            });
+        }
+    } else {
+        document.getElementById("title").innerHTML = "No results found!";
     }
 };
 
