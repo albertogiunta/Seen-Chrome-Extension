@@ -72,11 +72,17 @@ function insertUsersTvs(ul) {
 
 					var pnext = document.createElement('p');
 					pnext.setAttribute('class', 'center h5 m0');
-					pnext.innerHTML = 'Next to see: <b>' + 'E' + k.nextEp + 'x' + 'S' + k.nextSeas + '</b> / <i>' + k.epName + '</i>';
+					if (k.finishedSeas) {
+						pnext.innerHTML = 'No more episodes for this tv series'
+					} else {
+						pnext.innerHTML = 'Next to see: <b>' + 'E' + k.nextEp + 'x' + 'S' + k.nextSeas + '</b> / <i>' + k.epName + '</i>';
+					}
 
 					var pleft = document.createElement('p');
 					pleft.setAttribute('class', 'center h6 m0');
-					if (k.leftToSee != " ") {
+					if (k.finishedSeas) {
+						pleft.innerHTML = '';
+					} else if (k.leftToSee != " ") {
 						pleft.innerHTML = '(<b>' + k.leftToSee + '</b> ep. left to see in this season)';
 					} else {
 						pleft.innerHTML = '(Next ep. air date is: <b>' + k.lastEpAirDate + '</b>)';
@@ -118,12 +124,15 @@ function insertUsersTvs(ul) {
 						plinks.appendChild(options);
 				container.appendChild(nextbtn);
 			
-			if (k.lastEpAirDate == " " && k.finishedSeas == false) {
+			if (k.lastEpAirDate == " ") {
 				var modName = k.name.replace(/\s+/g, '+').toLowerCase();
 				nextbtn.setAttribute('href', '#');
 				sub.setAttribute('href', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-' + k.nextSeas + '/episode-' + k.nextEp + '/moviename-' + modName);
 				torrent.setAttribute('href', 'https://torrentz.eu/search?q=' + modName + '+s' + k.nextSeas + 'e' + k.nextEp);
 				streaming.setAttribute('href', '#');
+			} else if (k.nextEp == "01" && k.nextSeas == "01") {
+				console.log('aòlksdfj alòskdfj aòlsdfj aòlskdfj alòskdfj aòlskdfj aòlsdfjk aòlsdfjk ');
+				backbtn.setAttribute('data-disabled', true);
 			} else {
 				nextbtn.setAttribute('data-disabled', true);
 				sub.setAttribute('data-disabled', true);
@@ -151,8 +160,6 @@ function insertUsersTvs(ul) {
 			}
 			decrBtns[i].addEventListener('click', changeEpHandler);
 			opts[i].addEventListener('click', viewOptions);
-
-			
 		}
 	});
 }
@@ -251,9 +258,6 @@ function viewOptions () {
 					seasonseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined inactive-btn');
 					seasonseen.innerHTML = 'You\'re already up to date';
 				}
-
-				
-
 				var deletetvs = document.createElement('button');
 				deletetvs.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
 				deletetvs.innerHTML = 'Delete "' + title + '" from collection';
@@ -295,8 +299,10 @@ function viewOptions () {
 				status = res.status;
 				seas = parseInt(season);
 				if (seas == res.seasons.length && res.status == "Ended") {
+					console.log("1");
 					theMovieDb.tvSeasons.getById({"id": id, "season_number": seas}, finishSeason, function(){});
 				} else {			
+					console.log("2");
 					theMovieDb.tvSeasons.getById({"id": id, "season_number": (seas+1)}, firstOfNextSeason, function(data){
 						theMovieDb.tvSeasons.getById({"id": id, "season_number": (seas)}, lastAiredInSeason, function(){});	
 					});
@@ -327,6 +333,8 @@ function viewOptions () {
 				var date = new Date();
 				var airDate = Date.parse(res.episodes[i].air_date);
 				if (date < airDate || i == res.episodes.length-1) {
+					var finishedSeas = i == res.episodes.length-1 ? true : false;
+					console.log(finishedSeas);
 					jsonfile = getJsonForChromeSTorage(title, 
 												id, 
 												res.episodes[i].episode_number,
@@ -336,9 +344,10 @@ function viewOptions () {
 												null,
 												res.episodes[i].air_date,
 												res.status,
-												false);
+												finishedSeas);
 					chrome.storage.sync.set(jsonfile, function() {});
-					return;
+					window.location.href = "/Popup/popup.html";
+					break;
 				}
 			}
 		}
@@ -356,15 +365,14 @@ function viewOptions () {
 												res.status,
 												false);
 			chrome.storage.sync.set(jsonfile, function() {});
-
+			window.location.href = "/Popup/popup.html";
 		}
 
 		airedseen.addEventListener('click', function () {
 			theMovieDb.tv.getById({"id":id}, function(data){
 				var res = JSON.parse(data);
-				status = res.status;
-				seas = parseInt(season);
-				theMovieDb.tvSeasons.getById({"id": id, "season_number": (res.seasons.length)}, lastAiredInSeason, function(){});
+				var seas = res.status == 'Ended' ? res.seasons.length-1 : res.seasons.length;
+				theMovieDb.tvSeasons.getById({"id": id, "season_number": seas}, lastAiredInSeason, function(){});
 			}, function(){});
 		});
 	}
@@ -449,8 +457,10 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 	var hasEnded = nums.hasEnded;
 
 	if (!hasEnded) {
+		console.log("yes");
 		theMovieDb.tvSeasons.getById({"id": id, "season_number": nextSeas}, successSeasonData, errorSeasonData);
 	} else {
+		console.log("no");
 		jsonfile = getJsonForChromeSTorage(name, id, currEp, currSeas, '', currSeasNumEps, leftToSee, lastEpAirDate, status, hasEnded);
 		chrome.storage.sync.set(jsonfile, function() {});
 		window.location.href="/Popup/popup.html";
@@ -475,7 +485,6 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 				nextSeas = currSeas + 1;
 			} else {
 				hasEnded = true;
-				console.log(hasEnded);
 			}
 		} else {
 			if (currEp - 1 > 0) {
@@ -486,6 +495,9 @@ function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, cu
 				// next season / first ep
 				nextEp = "last";
 				nextSeas = currSeas - 1;
+			} else if (currEp == 1 && currSeas == 1) {
+				nextEp = 1;
+				nextSeas = 1;
 			} else {
 				hasEnded = true;
 			}
