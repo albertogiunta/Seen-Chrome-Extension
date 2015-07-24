@@ -191,7 +191,10 @@ function successAdd(data) {
                                                            'leftToSee': leftToSee,
                                                            'lastEpAirDate': null,
                                                            'status': status,
-                                                           'finishedSeas': false});
+                                                           'finishedSeas': false,
+                                                           'subtitles': "http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)",
+                                                           'torrent':'https://torrentz.eu/search?q=(N)+s(S)e(E)',
+                                                           'streaming':''});
 
     var jsonfile = {};
     jsonfile[save] = selectedValues;
