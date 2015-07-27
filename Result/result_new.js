@@ -204,13 +204,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	var AdditionController = (function() {
 
 		function addToCollection(id, name) {
-			theMovieDb.tv.getById({"id":id}, function(data) {
-		        var r = JSON.parse(data);
-		        status = r.status;
-		        theMovieDb.tvSeasons.getById({"id":id, "season_number":1}, function(data) {
-		        	_successSeasonCB(data, id, name, status);
-		        }, _errorSeasonCB);
-	    	}, function() {});
+			theMovieDb.tv.getById({"id":id}, 
+				function(data) {
+			        var r = JSON.parse(data);
+			        status = r.status;
+			        theMovieDb.tvSeasons.getById({"id":id, "season_number":1}, 
+			        	function(data) {
+			        		_successSeasonCB(data, id, name, status);
+		        		}, function() {
+		        		});
+	    		}, function() {
+	    		});	
 		}
 
 		function _successSeasonCB (data, id, name, status) {
