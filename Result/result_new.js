@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var DomController = (function() {
 
 		var r; // variable for search results (return by theMovieDb)
-		_setListeners();
+		_setGeneralListeners();
 
 		function renderSearch(data) {
 			r = JSON.parse(data);
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				_resetPage(searchForm, main);
 				_createResultsTable();
 
-				_setListeners();
+				_setAdditionBtnsListeners();
 			}
 		}
 
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		/* ---------------------------------------------------------------------------------------------- */
-		function _setListeners() {
+		function _setGeneralListeners() {
 
 			// if the search button  is clicked it will fire a search		
 			document.getElementById("search-btn").addEventListener('click', function() {
@@ -145,8 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			// if the back button is clicked it will redirect to the main html page
 			document.getElementById('back-btn').addEventListener('click', function() {
 			    window.location.href="/Popup/popup.html";
-			}); 
+			});
+		}
 
+		function _setAdditionBtnsListeners() {
 			// listener for every "add to collection" button		
 			var addBtn = document.getElementsByClassName("tvs-a")
 			for (var i = 0; i < addBtn.length; i++) {
@@ -206,22 +208,24 @@ document.addEventListener('DOMContentLoaded', function() {
 		        var r = JSON.parse(data);
 		        status = r.status;
 		        theMovieDb.tvSeasons.getById({"id":id, "season_number":1}, function(data) {
-		        	_successTvCB(data, id, name, status);
-		        }, _errorTvCB);
+		        	_successSeasonCB(data, id, name, status);
+		        }, _errorSeasonCB);
 	    	}, function() {});
 		}
 
-		function _successTvCB (data, id, name, status) {
+		function _successSeasonCB (data, id, name, status) {
 	        var r = JSON.parse(data);
+	        var subtitiles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)',
+           	var torrent = 'https://torrentz.eu/search?q=(N)+s(S)e(E)',
 	        
-	        var currSeasNumEps = r.episodes.length;
+	        var seasEpisodes = r.episodes.length;
 
 	        var currentDate = new Date();
 	        var leftToSee = 0;
-	        if (Date.parse(r.episodes[currSeasNumEps-1].air_date) < currentDate) {
-	            leftToSee = currSeasNumEps;
+	        if (Date.parse(r.episodes[seasEpisodes-1].air_date) < currentDate) {
+	            leftToSee = seasEpisodes;
 	        } else {
-	            for (var i = 0; i < currSeasNumEps; i++) {
+	            for (var i = 0; i < seasEpisodes; i++) {
 	                var airDate = Date.parse(r.episodes[i].air_date);
 	                if (airDate > currentDate) {
 	                    break;
@@ -230,19 +234,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	            }
 	        }
 
-	        var save = r.id, selectedValues = JSON.stringify({'name': name, 
-	                                                               'id': id, 
-	                                                               'nextEp': '01', 
-	                                                               'nextSeas': '01', 
-	                                                               'epName': r.episodes[0].name,
-	                                                               'currSeasNumEps': currSeasNumEps,
-	                                                               'leftToSee': leftToSee,
-	                                                               'lastEpAirDate': null,
-	                                                               'status': status,
-	                                                               'finishedSeas': false,
-	                                                               'subtitles': "http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)",
-	                                                               'torrent':'https://torrentz.eu/search?q=(N)+s(S)e(E)',
-	                                                               'streaming':''});
+	        var save = r.id, selectedValues = JSON.stringify({'tvs-name': name, 
+                                                               'tvs-id': id, 
+                                                               'ep-number': '01', 
+                                                               'seas-number': '01', 
+                                                               'ep-name': r.episodes[0].name,
+                                                               'seas-eps': seasEpisodes,
+                                                               'left-to-see': leftToSee,
+                                                               'ep-airdate': null,
+                                                               'tvs-status': status,
+                                                               'seas-finished': false,
+                                                               'subtitles': subtitles,
+                                                               'torrent': torrent,
+                                                               'streaming':''});
 
 	        var jsonfile = {};
 	        jsonfile[save] = selectedValues;
@@ -251,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		}
 
-		function _errorTvCB (data) {
+		function _errorSeasonCB (data) {
 
 		}
 
