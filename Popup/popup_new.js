@@ -73,27 +73,29 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	/* ---------------------------------------------------------------------------------------------- */
 	var StorageController = (function() {
 
-		function setStorage(r, func) {
+		function setStorage(r, fn) {
 			chrome.storage.sync.set(_getJson(r), function() {
-				if (typeof func == callback) {
-					func;
+				if (fn && typeof(fn) === typeof(Function)) {
+					fn;
+					window.location.href="/Popup/popup.html";
 				}
 			});
 		}
 
 		function _getJson(r) {
-			var save = r.id,
+			var save = r.tvsId,
 				selectedValues = JSON.stringify({
-					'tvs-name': r.tvsName,
-					'tvs-id': r.tvsId,
-					'ep-number': parseInt(r.epNumber),
-					'seas-number': parseInt(r.seasNumber),
-					'ep-name': r.epName,
-					'seas-eps': r.seasEpisodes,
-					'left-to-see': r.leftToSee,
-					'ep-airdate': r.epAirdate,
-					'tvs-status': r.tvsStatus,
-					'seas-finished': r.seasFinished,
+					'tvsName': r.tvsName,
+					'tvsId': r.tvsId,
+					'episodeNumber': parseInt(r.episodeNumber),
+					'seasonNumber': parseInt(r.seasonNumber),
+					'episodeName': r.episodeName,
+					'seasEpisodes': r.seasEpisodes,
+					'leftToSee': r.leftToSee,
+					'episodeAirdate': r.episodeAirdate,
+					'tvsStatus': r.tvsStatus,
+					'seasFinished': r.seasFinished,
+					'tvsFinished': r.tvsFinished,
 					'subtitles': r.subtitles,
 					'torrent': r.torrent,
 					'streaming': r.streaming
@@ -114,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	/* ---------------------------------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------- */
 	var DomController = (function() {
+		_setGeneralListeners();
 
 		function renderTvs () {
 			// dom caching
@@ -126,14 +129,16 @@ document.addEventListener('DOMContentLoaded', function(e) {
 					var k = JSON.parse(items[keys[i]]);
 
 					var navBtns = _htmlNavigationBtns();
-					var mainText = _htmlMainTexts();
+					var mainText = _htmlMainTexts(k);
 					var linkBtns = _htmlLinkBtns();
+
 					_toggleBtns(navBtns, mainText, linkBtns, k);
+
 					_htmlAppendElements(main, navBtns, mainText, linkBtns);
-					document.body.scrollTop = ScrollController.getScroll();
 
-
+					_setTvsListeners();
 				}
+				document.body.scrollTop = ScrollController.getScroll();
 			});
 		}
 
@@ -166,41 +171,49 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			}
 		}
 
-		function _htmlMainTexts () {
+		function _htmlMainTexts (k) {
 			var container = document.createElement('div');
 			container.setAttribute('class', 'flex mb1');
-			container.setAttribute('data-tvs', k.id);
+			container.setAttribute('data-tvs', k.tvsId);
 
 			var maindiv = document.createElement('div');
 			maindiv.setAttribute('class', 'overflow-scroll flex-auto overflow-hidden p0');
 			
 			var pTvsName = document.createElement('p');
-			if (k.name.length >= 17 ) {
+			if (k.tvsName.length >= 17 ) {
 				pTvsName.setAttribute('class', 'center h3 pb0.4 m0 maintitle');
 			} else {
 				pTvsName.setAttribute('class', 'center h3 pb0.4 m0 maintitle divider');
 			}
-			pTvsName.innerHTML = k.name;
+			pTvsName.innerHTML = k.tvsName;
 
 			var pnextToSee = document.createElement('p');
 			pnextToSee.setAttribute('class', 'center h5 m0');
-			if (k.finishedSeas && k.status == "Ended") {
-				pnextToSee.innerHTML = 'No more episodes for this tv series'
+			if (k.tvsFinished) {
+				if (k.tvsStatus == "Ended") {
+					pnextToSee.innerHTML = 'No more episodes for this tv series'
+				} else {
+					pnextToSee.innerHTML = 'Waiting for more episodes being aired'
+				}
 			} else {
-				pnextToSee.innerHTML = 'Next to see: <b>' + 'E' + k.nextEp + 'x' + 'S' + k.nextSeas + '</b> / <i>' + k.epName + '</i>';
+				episodeNumber = (k.episodeNumber < 10 ? '0' : '') + k.episodeNumber;
+				seasonNumber = (k.seasonNumber < 10 ? '0' : '') + k.seasonNumber;
+				pnextToSee.innerHTML = 'Next to see: <b>' + 'E' + episodeNumber + 'x' + 'S' + seasonNumber + '</b> / <i>' + k.episodeName + '</i>';
 			}
 
-			lastEpAirDate = k.lastEpAirDate == null ? ' ' : k.lastEpAirDate;
+			episodeAirdate = k.episodeAirdate == null ? ' ' : k.episodeAirdate;
 			leftToSee = k.leftToSee == null ? ' ' : k.leftToSee;
 
 			var pleftToSee = document.createElement('p');
 			pleftToSee.setAttribute('class', 'center h6 m0');
-			if (k.finishedSeas) {
+			if (k.seasFinished) {
 				pleftToSee.innerHTML = '';
 			} else if (leftToSee != ' ') {
 				pleftToSee.innerHTML = '(<b>' + leftToSee + '</b> ep. left to see in this season)';
+			} else if (!k.tvsFinished) {
+				pleftToSee.innerHTML = '(Next ep. air date is: <b>' + episodeAirdate + '</b>)';
 			} else {
-				pleftToSee.innerHTML = '(Next ep. air date is: <b>' + lastEpAirDate + '</b>)';
+				pleftToSee.innerHTML = '';
 			}
 
 			function getContainer () {
@@ -300,8 +313,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		}
 
 		function _toggleBtns (navBtns, mainText, linkBtns, k) {
-			if (k.lastEpAirDate == null) {
-				var escTvsName = k.name.replace(/\s+/g, '+').toLowerCase();
+			if (k.episodeAirdate == null) {
+				var escTvsName = k.tvsName.replace(/\s+/g, '+').toLowerCase();
 
 				_setLink(escTvsName, k.subtitles, linkBtns.subtitles());
 				_setLink(escTvsName, k.torrent, linkBtns.torrent());
@@ -311,15 +324,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
 					reg = new RegExp(/((\(S\))|(\(E\))|(\(N\)))/);
 					linkStr = link;
 					if (reg.test(element)) {
-						linkStr = element.replace(/(\(S\))/, k.nextSeas);
-						linkStr = linkStr.replace(/(\(E\))/, k.nextEp);
+						linkStr = element.replace(/(\(S\))/, k.seasonNumber);
+						linkStr = linkStr.replace(/(\(E\))/, k.episodeNumber);
 						linkStr = linkStr.replace(/(\(N\))/, escTvsName);
 					}
 					element.setAttribute('href', linkStr);					
 				}
 				// navBtns.nextbtn.setAttribute('href', '#');
 
-			} else if (parseInt(k.nextEp) == 1 && parseInt(k.nextSeas) == 1) {
+			} else if (parseInt(k.episodeNumber) == 1 && parseInt(k.seasonNumber) == 1) {
 				navBtns.backbtn().setAttribute('data-disabled', true);
 			} else {
 				navBtns.nextbtn().setAttribute('data-disabled', true);
@@ -329,12 +342,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			}
 		}
 
-		
-
-
 		/* ---------------------------------------------------------------------------------------------- */
 		function _setGeneralListeners() {
-
 			// if + btn is clicked, the page is redirected to the search html page
 			document.getElementById('add-btn').addEventListener('click', function() {
 				window.location.href = "/Result/result.html";
@@ -349,14 +358,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			var j = -1;
 			for (var i = 0; i < incrBtns.length; i++) {
 				if (!incrBtns[i].getAttribute('data-disabled')) {
-					// incrBtns[i].addEventListener('click', changeEpHandler);
-					// linkBtns[++j].addEventListener('click', linkHandler);
-					// linkBtns[++j].addEventListener('click', linkHandler);
-					// linkBtns[++j].addEventListener('click', function() {});
-					// linkBtns[++j].addEventListener('click', function() {});
+					incrBtns[i].addEventListener('click', _changeListener);
+					linkBtns[++j].addEventListener('click', _linkListener);
+					linkBtns[++j].addEventListener('click', _linkListener);
+					linkBtns[++j].addEventListener('click', function() {});
+					linkBtns[++j].addEventListener('click', function() {});
 				}
 				if (!decrBtns[i].getAttribute('data-disabled')) {
-					// decrBtns[i].addEventListener('click', changeEpHandler);
+					decrBtns[i].addEventListener('click', _changeListener);
 				}
 	
 				opts[i].addEventListener('click', function() {
@@ -370,6 +379,25 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			}
 		}
 
+		function _linkListener () {
+			ScrollController.setScroll();
+			chrome.tabs.create({active: true, url: this.href});
+		}
+
+		function _changeListener () {
+			ScrollController.setScroll();
+			var id = this.parentNode.getAttribute('data-tvs');
+			var isIncrement = this.className.split(" ").indexOf('incr-btn') >= 1 ? true : false;
+			var selectedTvsLi = this.parentNode;
+			chrome.storage.sync.get(id, function(obj) {
+				var k = JSON.parse(obj[id]);
+				theMovieDb.tv.getById({"id":k.tvsId}, function(data) {
+														TvsController.changeEpisode(isIncrement, JSON.parse(data), k);
+													}, function(data) {
+													});
+			});
+		}
+
 		return {
 			renderTvs: renderTvs
 		}
@@ -377,12 +405,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	})();
 
 
-	/* ---------------------------------------------------------------------------------------------- */
+	/* ------------------------------	---------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------------------------------- */
 	var TvsController = (function() {
 
 		checkForNewEpisodes()
 
+		/* ---------------------------------------------------------------------------------------------- */
 		function checkForNewEpisodes() {
 			chrome.storage.sync.get(null, function(itemsSet) {
 				keySet = Object.keys(itemsSet);
@@ -398,10 +427,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			}
 			
 			k = JSON.parse(itemsSet[keySet[recordNumber]]);
-			if (k.lastEpAirDate != null) {
-				theMovieDb.tvSeasons.getById({"id": k.id, "season_number": k.nextSeas}, 
+			if (k.episodeAirdate != null) {
+				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, 
 					function(data) {
-						_checkTvs(data);
+						_checkTvs(data, recordNumber, keySet, itemsSet);
 					}, function() {
 				});
 			} else {
@@ -409,12 +438,12 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			}
 		}
 
-		function _checkTvs (data) {
+		function _checkTvs (data, recordNumber, keySet, itemsSet) {
 			var r = JSON.parse(data);
 			
 			var date = new Date();
 			var leftToSee = 0;
-			var first = parseInt(k.nextEp) - 1;
+			var first = parseInt(k.episodeNumber) - 1;
 			
 			// check how many new episodes are there
 			for (var i = first; i < r.episodes.length; i++) {
@@ -424,9 +453,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				}
 			}
 
+			console.log(k)
 			if (leftToSee > 0) {
-				var dataArray = [k.name, k.id, k.nextEp, k.nextSeas, k.epName, k.currSeasNumEps, leftToSee, 
-								   		  null, k.status, k.finishedSeas, k.subtitles, k.torrent, k.streaming];
+				var dataArray = [k.tvsName, k.tvsId, k.episodeNumber, k.seasonNumber, k.episodeName, k.seasEpisodes, leftToSee, 
+								   		  null, k.tvsStatus, k.seasFinished, false, k.subtitles, k.torrent, k.streaming];
 				StorageController.setStorage(dataArray, function() {
 						_fetchUpdates(recordNumber + 1, keySet, itemsSet);
 				});
@@ -434,5 +464,102 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				_fetchUpdates(recordNumber + 1, keySet, itemsSet);
 			}
 		}
+
+		/* ---------------------------------------------------------------------------------------------- */
+		function changeEpisode (isIncrement, rTvs, k) {
+			var rSeas = new Array();
+			for (var i = 0; i < rTvs.seasons.length; i++) {
+				if (parseInt(rTvs.seasons[i].season_number) == k.seasonNumber) {
+					rSeas = rTvs.seasons[i];
+					break;
+				}
+			}
+
+			var newK = k;
+
+			newK.tvsStatus = rTvs.status;
+			console.log(newK)
+			_updateEpisode(isIncrement, newK, rSeas, rTvs);
+
+			if (!newK.tvsFinished) {
+				theMovieDb.tvSeasons.getById({"id": newK.tvsId, "season_number": newK.seasonNumber}, function (data) {
+																							_successSeasonCB(newK, JSON.parse(data))
+																						}, function(data) {
+																						});
+			} else {
+				StorageController.setStorage(newK, function() {
+						
+				});
+			}
+		}
+
+		function _updateEpisode (isIncrement, k, rSeas, rTvs) {
+			k.tvsFinished = false;
+			if (isIncrement) {
+				if (k.episodeNumber + 1 <= rSeas.episode_count) {
+					// same season / next ep
+					k.episodeNumber++;
+				} else if (k.episodeNumber + 1 > rSeas.episode_count && k.seasonNumber + 1 <= rTvs.number_of_seasons) {
+					// next season / first ep
+					k.episodeNumber = 1;
+					k.seasonNumber++;
+				} else {
+					// user got to the end of the tvs
+					k.leftToSee = null;
+					k.tvsFinished = true;
+				}
+			} else {
+				if (k.episodeNumber - 1 > 0) {
+					// same season / previous ep
+					k.episodeNumber--;
+				} else if (k.episodeNumber - 1 == 0 && k.seasonNumber - 1 > 0) {
+					// previous season / last ep
+					k.episodeNumber = 'last';
+					k.seasonNumber--;
+				} else {
+					// user got to the start of the tvs
+					// k.tvsFinished = true;
+				}
+			}
+		}		
+
+
+		function _successSeasonCB(k, r) {
+			k.episodeNumber = k.episodeNumber == 'last' || (k.tvsFinished && k.leftToSee == null) ? r.episodes.length : k.episodeNumber;
+			rEpisode = r.episodes[k.episodeNumber-1];
+
+			k.episodeName = rEpisode.name;
+			k.seasEpisodes = r.episodes.length;
+			k.leftToSee = null;
+			k.episodeAirdate = null;
+			k.seasFinished = false;
+			
+			var airDate = Date.parse(rEpisode.air_date);
+			var date = new Date();
+		
+			console.log(k.seasEpisodes);
+			if (airDate > date) {
+				k.episodeAirdate = rEpisode.air_date;
+			} else {
+				for (var i = k.episodeNumber-1; i < k.seasEpisodes; i++) {
+					var airDate = Date.parse(r.episodes[i].air_date);
+					if (airDate < date) {
+						k.leftToSee++;
+					}
+				}
+			}
+
+			StorageController.setStorage(k, function() {
+					window.location.href="/Popup/popup.html";
+			});
+		}
+
+
+		return {
+			changeEpisode: changeEpisode
+		}
+
+
+
 	})();
 });

@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		function _successSeasonCB (data, id, name, status) {
 	        var r = JSON.parse(data);
-	        var subtitiles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)',
-           	var torrent = 'https://torrentz.eu/search?q=(N)+s(S)e(E)',
+	        var subtitles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)';
+           	var torrent = 'https://torrentz.eu/search?q=(N)+s(S)e(E)';
 	        
 	        var seasEpisodes = r.episodes.length;
 
@@ -238,19 +238,20 @@ document.addEventListener('DOMContentLoaded', function() {
 	            }
 	        }
 
-	        var save = r.id, selectedValues = JSON.stringify({'tvs-name': name, 
-                                                               'tvs-id': id, 
-                                                               'ep-number': '01', 
-                                                               'seas-number': '01', 
-                                                               'ep-name': r.episodes[0].name,
-                                                               'seas-eps': seasEpisodes,
-                                                               'left-to-see': leftToSee,
-                                                               'ep-airdate': null,
-                                                               'tvs-status': status,
-                                                               'seas-finished': false,
-                                                               'subtitles': subtitles,
-                                                               'torrent': torrent,
-                                                               'streaming':''});
+	        var save = id, selectedValues = JSON.stringify({'tvsName': name, 
+                                                              'tvsId': id, 
+                                                              'episodeNumber': 1, 
+                                                              'seasonNumber': 1, 
+                                                              'episodeName': r.episodes[0].name,
+                                                              'seasEpisodes': seasEpisodes,
+                                                              'leftToSee': leftToSee,
+                                                              'episodeAirdate': null,
+                                                              'tvsStatus': status,
+                                                              'seasFinished': false,
+                                                              'tvsFinished': false,
+                                                              'subtitles': subtitles,
+                                                              'torrent': torrent,
+                                                              'streaming': ''});
 
 	        var jsonfile = {};
 	        jsonfile[save] = selectedValues;
