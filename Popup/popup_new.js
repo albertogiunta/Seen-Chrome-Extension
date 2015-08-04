@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				}
 				// navBtns.nextbtn.setAttribute('href', '#');
 
-			} else if (parseInt(k.episodeNumber) == 1 && parseInt(k.seasonNumber) == 1) {
+			} else if (k.episodeNumber == 1 && k.seasonNumber == 1) {
 				navBtns.backbtn().setAttribute('data-disabled', true);
 			} else {
 				navBtns.nextbtn().setAttribute('data-disabled', true);
@@ -328,10 +328,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			var r = JSON.parse(data);
 									
 			var date = new Date();
-			var first = parseInt(k.episodeNumber);
 			
 			// check how many new episodes are there
-			for (var i = first + k.leftToSee; i < r.episodes.length; i++) {
+			for (var i = k.episodeNumber + k.leftToSee; i < r.episodes.length; i++) {
 				var airDate = Date.parse(r.episodes[i].air_date);
 				if (airDate < date) {
 					k.leftToSee++;
@@ -354,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		function changeEpisode (isIncrement, rTvs, k) {
 			var rSeas = new Array();
 			for (var i = 0; i < rTvs.seasons.length; i++) {
-				if (parseInt(rTvs.seasons[i].season_number) == k.seasonNumber) {
+				if (rTvs.seasons[i].season_number == k.seasonNumber) {
 					rSeas = rTvs.seasons[i];
 					break;
 				}
