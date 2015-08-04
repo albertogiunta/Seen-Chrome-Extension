@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	// document.getElementById('add-btn').addEventListener('click', function() {
 	// 	window.location.href = "/Result/result.html";
 	// });
-	chrome.storage.sync.get(null, function(items) {
-		keys = Object.keys(items);
-		initialChecks(0, keys, items);		
-	});
-});
+// 	chrome.storage.sync.get(null, function(items) {
+// 		keys = Object.keys(items);
+// 		initialChecks(0, keys, items);		
+// 	});
+// });
 
 
 // function getScroll() {
@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
 /*
 Builds the user tv series list
 */
-function buildUserList() {
-	insertUsersTvs();
-}
+// function buildUserList() {
+// 	insertUsersTvs();
+// }
 
 // function getSvg(id, svg) {
 // 	var div = document.createElement('div');
@@ -261,141 +261,141 @@ function insertUsersTvs() {
 }
 
 
-function changeEpHandler () {
-	setScroll();
-	var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
-	var isIncrement = this.className.split(" ").indexOf('incr-btn') >= 1 ? true : false;
-	var selectedTvsLi = this.parentNode;
-	chrome.storage.sync.get(chromeStorageKey, function(obj) {
-		var selData = getSelectedTvsData(chromeStorageKey, obj);
-		theMovieDb.tv.getById({"id":selData.id}, 
-								function(data) {
-									changeEpisode(isIncrement, data, chromeStorageKey, selData.name, selData.id, 
-													selData.currEp, selData.currSeas, selData.epName, selData.currSeasNumEps, 
-													selData.leftToSee, selData.lastEpAirDate, selData.status, selData.finishedSeas,
-													selData.subtitles, selData.torrent, selData.streaming);
-								}, function(data) {
-									console.log("error");
-								});
-	});
-}
+// function changeEpHandler () {
+// 	setScroll();
+// 	var chromeStorageKey = this.parentNode.getAttribute('data-tvs');
+// 	var isIncrement = this.className.split(" ").indexOf('incr-btn') >= 1 ? true : false;
+// 	var selectedTvsLi = this.parentNode;
+// 	chrome.storage.sync.get(chromeStorageKey, function(obj) {
+// 		var selData = getSelectedTvsData(chromeStorageKey, obj);
+// 		theMovieDb.tv.getById({"id":selData.id}, 
+// 								function(data) {
+// 									changeEpisode(isIncrement, data, chromeStorageKey, selData.name, selData.id, 
+// 													selData.currEp, selData.currSeas, selData.epName, selData.currSeasNumEps, 
+// 													selData.leftToSee, selData.lastEpAirDate, selData.status, selData.finishedSeas,
+// 													selData.subtitles, selData.torrent, selData.streaming);
+// 								}, function(data) {
+// 									console.log("error");
+// 								});
+// 	});
+// }
 
 function viewOptions (main, data) {
 
-	var id = main.getAttribute('data-tvs');
+	// var id = main.getAttribute('data-tvs');
 	
-	var title = main.children[1].children[0].innerHTML;
+	// var title = main.children[1].children[0].innerHTML;
 	
-	var seasonstr = main.children[1].children[1].innerHTML;
-	var nextep = main.children[1].children[2].innerHTML;
-	var season = nextep.substring(1, 5) != 'Next' ? seasonstr.substring(21, 23) : "";
+	// var seasonstr = main.children[1].children[1].innerHTML;
+	// var nextep = main.children[1].children[2].innerHTML;
+	// var season = nextep.substring(1, 5) != 'Next' ? seasonstr.substring(21, 23) : "";
 
 	
-	var tvsChildren = new Array();
-	while (main.firstChild) {
-		tvsChildren.push(main.firstChild);
-		main.removeChild(main.firstChild);
-	}
+	// var tvsChildren = new Array();
+	// while (main.firstChild) {
+	// 	tvsChildren.push(main.firstChild);
+	// 	main.removeChild(main.firstChild);
+	// }
 
-	var maindiv = document.createElement('div');
-	maindiv.setAttribute('class', 'overflow-scroll flex-auto overflow-hidden p0');
+	// var maindiv = document.createElement('div');
+	// maindiv.setAttribute('class', 'overflow-scroll flex-auto overflow-hidden p0');
 
-		var pname = document.createElement('h3');
-		pname.setAttribute('class', 'center pb0.4 m0 maintitle divider');
-		pname.innerHTML = title;
+	// 	var pname = document.createElement('h3');
+	// 	pname.setAttribute('class', 'center pb0.4 m0 maintitle divider');
+	// 	pname.innerHTML = title;
 
-			var divsubs = document.createElement('div');
-			divsubs.setAttribute('class', 'flex flex-center');
+	// 		var divsubs = document.createElement('div');
+	// 		divsubs.setAttribute('class', 'flex flex-center');
 
-			var psubs = document.createElement('p');
-			psubs.setAttribute('class', 'flex-none col-2 left h6 m0');
-			psubs.innerHTML = "Subtitles: ";
+	// 		var psubs = document.createElement('p');
+	// 		psubs.setAttribute('class', 'flex-none col-2 left h6 m0');
+	// 		psubs.innerHTML = "Subtitles: ";
 
-			var fsubs = document.createElement('input');
-			fsubs.setAttribute('id', 'subs-input');
-			fsubs.setAttribute('class', 'flex-auto h5 field not rounded');
-			fsubs.setAttribute('type', 'search');
-			fsubs.setAttribute('placeholder', data.subtitles);
+	// 		var fsubs = document.createElement('input');
+	// 		fsubs.setAttribute('id', 'subs-input');
+	// 		fsubs.setAttribute('class', 'flex-auto h5 field not rounded');
+	// 		fsubs.setAttribute('type', 'search');
+	// 		fsubs.setAttribute('placeholder', data.subtitles);
 
-			var divtorrent = document.createElement('div');
-			divtorrent.setAttribute('class', 'flex flex-center');
+	// 		var divtorrent = document.createElement('div');
+	// 		divtorrent.setAttribute('class', 'flex flex-center');
 
-			var ptorrent = document.createElement('p');
-			ptorrent.setAttribute('class', 'flex-none col-2 left h6 m0');
-			ptorrent.innerHTML = "Torrent: ";
+	// 		var ptorrent = document.createElement('p');
+	// 		ptorrent.setAttribute('class', 'flex-none col-2 left h6 m0');
+	// 		ptorrent.innerHTML = "Torrent: ";
 
-			var ftorrent = document.createElement('input');
-			ftorrent.setAttribute('id', 'torrent-input');
-			ftorrent.setAttribute('class', 'flex-auto h5 field not rounded');
-			ftorrent.setAttribute('type', 'search');
-			ftorrent.setAttribute('placeholder', data.torrent);
+	// 		var ftorrent = document.createElement('input');
+	// 		ftorrent.setAttribute('id', 'torrent-input');
+	// 		ftorrent.setAttribute('class', 'flex-auto h5 field not rounded');
+	// 		ftorrent.setAttribute('type', 'search');
+	// 		ftorrent.setAttribute('placeholder', data.torrent);
 
-			var divstreaming = document.createElement('div');
-			divstreaming.setAttribute('class', 'flex flex-center');
+	// 		var divstreaming = document.createElement('div');
+	// 		divstreaming.setAttribute('class', 'flex flex-center');
 
-			var pstreaming = document.createElement('p');
-			pstreaming.setAttribute('class', 'flex-none col-2 left h6 m0');
-			pstreaming.innerHTML = "Streaming: ";
+	// 		var pstreaming = document.createElement('p');
+	// 		pstreaming.setAttribute('class', 'flex-none col-2 left h6 m0');
+	// 		pstreaming.innerHTML = "Streaming: ";
 
-			var fstreaming = document.createElement('input');
-			fstreaming.setAttribute('id', 'streaming-input');
-			fstreaming.setAttribute('class', 'flex-auto h5 field not rounded');
-			fstreaming.setAttribute('type', 'search');
-			fstreaming.setAttribute('placeholder', data.streaming);
+	// 		var fstreaming = document.createElement('input');
+	// 		fstreaming.setAttribute('id', 'streaming-input');
+	// 		fstreaming.setAttribute('class', 'flex-auto h5 field not rounded');
+	// 		fstreaming.setAttribute('type', 'search');
+	// 		fstreaming.setAttribute('placeholder', data.streaming);
 
-			var pops = document.createElement('p');
-			pops.setAttribute('class', 'center mb1 h5 link-btn-container');
+	// 		var pops = document.createElement('p');
+	// 		pops.setAttribute('class', 'center mb1 h5 link-btn-container');
 				
-				var seasonseen = document.createElement('button');
-				var airedseen = document.createElement('button');
-				if (season) {
-					airedseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
-					airedseen.innerHTML = 'Set all aired as seen';
-					seasonseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
-					seasonseen.innerHTML = 'Set season ' + season + ' as seen';
-				} else {
-					airedseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined inactive-btn');
-					airedseen.innerHTML = 'You\'re already up to date';
-					seasonseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined inactive-btn');
-					seasonseen.innerHTML = 'You\'re already up to date';
-				}
-				var deletetvs = document.createElement('button');
-				deletetvs.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
-				deletetvs.innerHTML = 'Delete "' + title + '" from collection';
+	// 			var seasonseen = document.createElement('button');
+	// 			var airedseen = document.createElement('button');
+	// 			if (season) {
+	// 				airedseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
+	// 				airedseen.innerHTML = 'Set all aired as seen';
+	// 				seasonseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
+	// 				seasonseen.innerHTML = 'Set season ' + season + ' as seen';
+	// 			} else {
+	// 				airedseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined inactive-btn');
+	// 				airedseen.innerHTML = 'You\'re already up to date';
+	// 				seasonseen.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined inactive-btn');
+	// 				seasonseen.innerHTML = 'You\'re already up to date';
+	// 			}
+	// 			var deletetvs = document.createElement('button');
+	// 			deletetvs.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
+	// 			deletetvs.innerHTML = 'Delete "' + title + '" from collection';
 
-				var promptdiv = document.createElement('div'); 
-				promptdiv.setAttribute('class', 'flex mt2');
+	// 			var promptdiv = document.createElement('div'); 
+	// 			promptdiv.setAttribute('class', 'flex mt2');
 
-				var confirmbtn = document.createElement('button'); 
-				confirmbtn.setAttribute('class', 'btn prompt-btn custom-btn flex-auto check');
-				confirmbtn.innerHTML = '<svg class="" viewBox="0 0 48 48" style="fill:currentcolor"><path d="'+ check + '"></path></svg>';
+	// 			var confirmbtn = document.createElement('button'); 
+	// 			confirmbtn.setAttribute('class', 'btn prompt-btn custom-btn flex-auto check');
+	// 			confirmbtn.innerHTML = '<svg class="" viewBox="0 0 48 48" style="fill:currentcolor"><path d="'+ check + '"></path></svg>';
 
-				var deletechangesbtn = document.createElement('button'); 
-				deletechangesbtn.setAttribute('class', 'btn prompt-btn custom-btn flex-auto cross');
-				deletechangesbtn.innerHTML = '<svg class="" viewBox="0 0 48 48" style="fill:currentcolor"><path d="'+ cross + '"></path></svg>';
+	// 			var deletechangesbtn = document.createElement('button'); 
+	// 			deletechangesbtn.setAttribute('class', 'btn prompt-btn custom-btn flex-auto cross');
+	// 			deletechangesbtn.innerHTML = '<svg class="" viewBox="0 0 48 48" style="fill:currentcolor"><path d="'+ cross + '"></path></svg>';
 
-		main.appendChild(maindiv);
-		maindiv.appendChild(pname);
-			maindiv.appendChild(pops);
-				pops.appendChild(seasonseen);
-				pops.appendChild(airedseen);
-				pops.appendChild(deletetvs);
-			maindiv.appendChild(divsubs);
-				divsubs.appendChild(psubs);
-				divsubs.appendChild(fsubs);
-			maindiv.appendChild(divtorrent);
-				divtorrent.appendChild(ptorrent);
-				divtorrent.appendChild(ftorrent);
-			maindiv.appendChild(divstreaming);
-				divstreaming.appendChild(pstreaming);
-				divstreaming.appendChild(fstreaming);
-			maindiv.appendChild(promptdiv);
-				promptdiv.appendChild(confirmbtn);
-				promptdiv.appendChild(deletechangesbtn);
+	// 	main.appendChild(maindiv);
+	// 	maindiv.appendChild(pname);
+	// 		maindiv.appendChild(pops);
+	// 			pops.appendChild(seasonseen);
+	// 			pops.appendChild(airedseen);
+	// 			pops.appendChild(deletetvs);
+	// 		maindiv.appendChild(divsubs);
+	// 			divsubs.appendChild(psubs);
+	// 			divsubs.appendChild(fsubs);
+	// 		maindiv.appendChild(divtorrent);
+	// 			divtorrent.appendChild(ptorrent);
+	// 			divtorrent.appendChild(ftorrent);
+	// 		maindiv.appendChild(divstreaming);
+	// 			divstreaming.appendChild(pstreaming);
+	// 			divstreaming.appendChild(fstreaming);
+	// 		maindiv.appendChild(promptdiv);
+	// 			promptdiv.appendChild(confirmbtn);
+	// 			promptdiv.appendChild(deletechangesbtn);
 
-	subtitles = fsubs.value ? fsubs.value : fsubs.getAttribute('placeholder');
-	torrent = ftorrent.value ? ftorrent.value : ftorrent.getAttribute('placeholder');
-	streaming = fstreaming.value ? fstreaming.value : fstreaming.getAttribute('placeholder');
+	// subtitles = fsubs.value ? fsubs.value : fsubs.getAttribute('placeholder');
+	// torrent = ftorrent.value ? ftorrent.value : ftorrent.getAttribute('placeholder');
+	// streaming = fstreaming.value ? fstreaming.value : fstreaming.getAttribute('placeholder');
 
 	if (season) {
 		seasonseen.addEventListener('click', function () {
@@ -492,10 +492,10 @@ function viewOptions (main, data) {
 		});
 	}
 
-	deletetvs.addEventListener('click', function () {
-		chrome.storage.sync.remove(id, function() {});
-		window.location.href = "/Popup/popup.html";
-	});
+	// deletetvs.addEventListener('click', function () {
+	// 	chrome.storage.sync.remove(id, function() {});
+	// 	window.location.href = "/Popup/popup.html";
+	// });
 
 	confirmbtn.addEventListener('click', function () {
 		subtitles = fsubs.value ? fsubs.value : fsubs.getAttribute('placeholder');
@@ -522,14 +522,14 @@ function viewOptions (main, data) {
 		});
 	});
 
-	deletechangesbtn.addEventListener('click', function () {
-		while (main.firstChild) {
-			main.removeChild(main.firstChild);
-		}
-		for (i = 0; i < tvsChildren.length; i++) {
-			main.appendChild(tvsChildren[i]);
-		}
-	});
+	// deletechangesbtn.addEventListener('click', function () {
+	// 	while (main.firstChild) {
+	// 		main.removeChild(main.firstChild);
+	// 	}
+	// 	for (i = 0; i < tvsChildren.length; i++) {
+	// 		main.appendChild(tvsChildren[i]);
+	// 	}
+	// });
 }
 
 // function linkHandler () {
@@ -578,35 +578,35 @@ Returns currEp,
 /*
 It checks if the next or previous episode is available and and if so, it gets and overwrite it in the corresponing chrome.storage.sync slot
 */
-function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, currSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, finishedSeas, subtitles, torrent, streaming) {
-	var isEnded = false;
-	var isAired = false;
-	var res = JSON.parse(data);
-	var resCurrSeas = [];
-	for (var i = 0; i < res.seasons.length; i++) {
-		if (res.seasons[i].season_number == currSeas) {
-			resCurrSeas = res.seasons[i];
-			break;
-		}
-	}
+// function changeEpisode(isIncrement, data, chromeStorageKey, name, id, currEp, currSeas, epName, currSeasNumEps, leftToSee, lastEpAirDate, status, finishedSeas, subtitles, torrent, streaming) {
+// 	var isEnded = false;
+// 	var isAired = false;
+// 	var res = JSON.parse(data);
+// 	var resCurrSeas = [];
+// 	for (var i = 0; i < res.seasons.length; i++) {
+// 		if (res.seasons[i].season_number == currSeas) {
+// 			resCurrSeas = res.seasons[i];
+// 			break;
+// 		}
+// 	}
 	
-	currEp = parseInt(currEp);
-	currSeas = parseInt(currSeas);
+// 	currEp = parseInt(currEp);
+// 	currSeas = parseInt(currSeas);
 
-	status = res.status;
-	var nums = updateEpSeasNumber(isIncrement, currEp, currSeas);
-	var nextEp = nums.nextEp;
-	var nextSeas = nums.nextSeas;
-	var hasEnded = nums.hasEnded;
+// 	status = res.status;
+// 	var nums = updateEpSeasNumber(isIncrement, currEp, currSeas);
+// 	var nextEp = nums.nextEp;
+// 	var nextSeas = nums.nextSeas;
+// 	var hasEnded = nums.hasEnded;
 
-	if (!hasEnded) {
-		theMovieDb.tvSeasons.getById({"id": id, "season_number": nextSeas}, successSeasonData, errorSeasonData);
-	} else {
-		jsonfile = getJsonForChromeSTorage(name, id, currEp, currSeas, '', currSeasNumEps, leftToSee, lastEpAirDate, status, hasEnded, subtitles, torrent, streaming);
-		chrome.storage.sync.set(jsonfile, function() {});
-		window.location.href="/Popup/popup.html";
-		return;
-	}
+// 	if (!hasEnded) {
+// 		theMovieDb.tvSeasons.getById({"id": id, "season_number": nextSeas}, successSeasonData, errorSeasonData);
+// 	} else {
+// 		jsonfile = getJsonForChromeSTorage(name, id, currEp, currSeas, '', currSeasNumEps, leftToSee, lastEpAirDate, status, hasEnded, subtitles, torrent, streaming);
+// 		chrome.storage.sync.set(jsonfile, function() {});
+// 		window.location.href="/Popup/popup.html";
+// 		return;
+// 	}
 
 	/*
 	It changes the episode and season number whether an increment or decrement is wanted
