@@ -4,7 +4,6 @@ var OptionsController = (function() {
 		var id = main.getAttribute('data-tvs');
 		chrome.storage.sync.get(id, function(obj) {
 			var k = JSON.parse(obj[id]);
-			console.log(k.tvsName)
 			OptionsDOMController.renderOptionsMenu(k, main);
 		});
 	}
@@ -185,27 +184,26 @@ var OptionsDOMController = (function() {
 	}
 
 	function _setButtonsListeners(k, seasonseen, airedseen, deletetvs) {
-		// seasonseen.addEventListener('click', function () {
-		// 	theMovieDb.tv.getById({"id":k.tvsId}, function(data){
-		// 		var r = JSON.parse(data);
-		// 		k.tvsStatus = r.status;
-		// 		season = parseInt(k.seasonNumber);
-		// 		if (season == r.seasons.length && r.status == "Ended") {
-		// 			theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": season}, ButtonsController.getLastAiredEpisodeInSeason(), function(){});
-		// 		// } else {			
-		// 		// 	theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (season+1)}, firstOfNextSeason, function(data){
-		// 		// 		theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (season)}, lastAiredInSeason, function(){});	
-		// 		// 	});
-		// 		}
-		// 	}, function(){});
-		// });
+		seasonseen.addEventListener('click', function () {
+			theMovieDb.tv.getById({"id":k.tvsId}, function(data){
+				var r = JSON.parse(data);
+				k.tvsStatus = r.status;
+				season = parseInt(k.seasonNumber);
+				if (season == r.seasons.length && r.status == "Ended") {
+					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": season}, ButtonsController.getLastAiredEpisodeInSeason(), function(){});
+				} else {			
+					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (season+1)}, firstOfNextSeason, function(data){
+						theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (season)}, lastAiredInSeason, function(){});	
+					});
+				}
+			}, function(){});
+		});
 
 
 		airedseen.addEventListener('click', function () {
 			theMovieDb.tv.getById({"id": k.tvsId}, function(data) {
 				var r = JSON.parse(data);
 				k.tvsStatus = r.status;
-				console.log(ButtonsController.getLastSeasonNumber(r))
 				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
 					ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
 				}, function(){
@@ -238,7 +236,6 @@ var ButtonsController = (function () {
 				var date = new Date();
 				var airDate = Date.parse(s.episodes[i].air_date);
 				if (date < airDate || i == s.episodes.length-1) {
-					console.log(i, s.episodes.length-1)
 					k.episodeNumber = s.episodes[i].episode_number;
 					k.seasonNumber =  s.season_number;
 					k.episodeName = s.episodes[i].name;
@@ -247,13 +244,17 @@ var ButtonsController = (function () {
 					k.seasFinished = i == s.episodes.length-1 ? true : false;
 					k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
 					k.episodeAirdate = k.tvsStatus != 'Ended' && !k.seasFinished ? s.episodes[i].air_date : null;
-					StorageController.setStorage(k, function(){});
+					StorageController.setStorage(k, function(){
+						window.location.href="/Popup/popup.html";
+					});
 					i = s.episodes.length;
 				}
 			}
 		}
 
+		function getFirstEpisodeOfSeason(r, k) {
 
+		}
 	}
 
 	return {

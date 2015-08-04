@@ -300,11 +300,11 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		function checkForNewEpisodes() {
 			chrome.storage.sync.get(null, function(itemsSet) {
 				keySet = Object.keys(itemsSet);
-				_fetchUpdates(0, keySet, itemsSet);
+				fetchUpdates(0, keySet, itemsSet);
 			});
 		}
 
-		function _fetchUpdates(recordNumber, keySet, itemsSet) {
+		function fetchUpdates(recordNumber, keySet, itemsSet) {
 			// base case - if all records have been checked
 			if (recordNumber == keySet.length) {
 				DomController.renderTvs();
@@ -313,41 +313,40 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 			// !!!!! ATTENZIONE, QUANDO FINISCE UNA STAGIONE COME FARE?
 			k = JSON.parse(itemsSet[keySet[recordNumber]]);
-			var asdf = localStorage.getItem('fromButton');
-			if (k.episodeAirdate != null && k.tvsStatus != 'Ended') {
+			if (k.tvsStatus != 'Ended') {
 				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, 
 					function(data) {
 						_checkTvs(data, recordNumber, keySet, itemsSet);
 					}, function() {
 				});
 			} else {
-				_fetchUpdates(recordNumber + 1, keySet, itemsSet);
+				fetchUpdates(recordNumber + 1, keySet, itemsSet);
 			}
 		}
 
 		function _checkTvs (data, recordNumber, keySet, itemsSet) {
 			var r = JSON.parse(data);
-			
+									
 			var date = new Date();
-			var leftToSee = 0;
-			var first = parseInt(k.episodeNumber) - 1;
+			var first = parseInt(k.episodeNumber);
 			
 			// check how many new episodes are there
-			for (var i = first; i < r.episodes.length; i++) {
+			for (var i = first + k.leftToSee; i < r.episodes.length; i++) {
 				var airDate = Date.parse(r.episodes[i].air_date);
 				if (airDate < date) {
-					leftToSee++;
+					k.leftToSee++;
 				}
 			}
 
-			if (leftToSee > 0) {
-				var dataArray = [k.tvsName, k.tvsId, k.episodeNumber, k.seasonNumber, k.episodeName, k.seasEpisodes, leftToSee, 
-								   		  null, k.tvsStatus, k.seasFinished, false, k.subtitles, k.torrent, k.streaming];
-				StorageController.setStorage(dataArray, function() {
-						_fetchUpdates(recordNumber + 1, keySet, itemsSet);
+			if (k.leftToSee > 0) {
+				k.episodeAirdate = null;
+				k.tvsFinished = false;
+				k.seasFinished = false;
+				StorageController.setStorage(k, function() {
+						TvsController.fetchUpdates(recordNumber + 1, keySet, itemsSet);
 				});
 			} else {
-				_fetchUpdates(recordNumber + 1, keySet, itemsSet);
+				fetchUpdates(recordNumber + 1, keySet, itemsSet);
 			}
 		}
 
@@ -372,7 +371,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
 																						}, function(data) {
 																						});
 			} else {
-				StorageController.setStorage(newK, function() {});
+				StorageController.setStorage(newK, function() {
+					window.location.href="/Popup/popup.html";
+				});
 			}
 		}
 
@@ -389,7 +390,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
 					k.seasonNumber++;
 				} else {
 					// user got to the end of the tvs
-					console.log("asldkjfaòlskdfjaòslkdfjaòslkdfjaòsldfjkòalksdfj")
 					k.leftToSee = null;
 					k.seasFinished = true;
 					k.tvsFinished = true;
@@ -434,11 +434,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				}
 			}
 
-			StorageController.setStorage(k, function() {});
+			StorageController.setStorage(k, function() {
+				window.location.href="/Popup/popup.html";
+			});
 		}
 
 		return {
-			changeEpisode: changeEpisode
+			changeEpisode: changeEpisode,
+			fetchUpdates: fetchUpdates
 		}
 	})();
 });

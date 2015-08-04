@@ -82,8 +82,7 @@ var StorageController = (function() {
 	function setStorage(r, fn) {
 		chrome.storage.sync.set(_getJson(r), function() {
 			if (fn && typeof(fn) === typeof(Function)) {
-				fn;
-				window.location.href="/Popup/popup.html";
+				fn();
 			}
 		});
 	}
