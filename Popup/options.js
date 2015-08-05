@@ -23,7 +23,7 @@ var OptionsDOMController = (function() {
 		var btns = _htmlButtons(k);
 		_htmlAppendElements(main, mainText, links, btns);
 		
-		_setGeneralListeners(btns.confirmbtn, btns.deletechangesbtn, main, hiddenStuff);
+		_setGeneralListeners(k, btns.confirmbtn, btns.deletechangesbtn, main, links, hiddenStuff);
 		_setButtonsListeners(k, btns.seasonseen, btns.airedseen, btns.deletetvs);
 	}
 
@@ -161,16 +161,22 @@ var OptionsDOMController = (function() {
 				btns.promptdiv.appendChild(btns.confirmbtn);
 				btns.promptdiv.appendChild(btns.deletechangesbtn);
 
-		subtitles = links.fsubs.value ? links.fsubs.value : links.fsubs.getAttribute('placeholder');
-		torrent = links.ftorrent.value ? links.ftorrent.value : links.ftorrent.getAttribute('placeholder');
-		streaming = links.fstreaming.value ? links.fstreaming.value : links.fstreaming.getAttribute('placeholder');
+		// subtitles = links.fsubs.value ? links.fsubs.value : links.fsubs.getAttribute('placeholder');
+		// torrent = links.ftorrent.value ? links.ftorrent.value : links.ftorrent.getAttribute('placeholder');
+		// streaming = links.fstreaming.value ? links.fstreaming.value : links.fstreaming.getAttribute('placeholder');
 	}
 
 	/* ---------------------------------------------------------------------------------------------- */
 
-	function _setGeneralListeners(confirmbtn, deletetvs, main, hiddenStuff) {
+	function _setGeneralListeners(k, confirmbtn, deletetvs, main, links, hiddenStuff) {
 		confirmbtn.addEventListener('click', function () {
-			
+			k.subtitles = links.fsubs.value ? links.fsubs.value : links.fsubs.getAttribute('placeholder');
+			k.torrent = links.ftorrent.value ? links.ftorrent.value : links.ftorrent.getAttribute('placeholder');
+			k.streaming = links.fstreaming.value ? links.fstreaming.value : links.fstreaming.getAttribute('placeholder');
+
+			StorageController.setStorage(k, function(){
+				window.location.href="/Popup/popup.html";
+			});
 		});
 
 		deletetvs.addEventListener('click', function () {
@@ -190,7 +196,7 @@ var OptionsDOMController = (function() {
 				k.tvsStatus = tv.status;
 				if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number){	
 					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (k.seasonNumber+1)}, function(data) {
-						ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k);
+						ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k, false);
 					}, function() {
 					});
 				} else {
@@ -203,23 +209,12 @@ var OptionsDOMController = (function() {
 			});
 		});
 
-				// 	}, function (data) {
-				// 		theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (k.seasonNumber)}, function(data) {
-				// 			console.log("ciao")
-				// 		}, function(){
-				// 		});	
-				// 	});
-				// if (k.seasonNumber == tv.seasons.length && tv.status == "Ended") {
-				// 	theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, function (data) {
-				// 		ButtonsController.getLastAiredEpisodeInSeason(tv, JSON.parse(data), k);
-				// 	}, function(){
-				// 	});
-
 		airedseen.addEventListener('click', function () {
 			theMovieDb.tv.getById({"id": k.tvsId}, function(data) {
 				var r = JSON.parse(data);
 				k.tvsStatus = r.status;
 				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
+					console.log(data)
 					ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
 				}, function(){
 				});
@@ -242,6 +237,7 @@ var OptionsDOMController = (function() {
 var ButtonsController = (function () {
 
 	function getLastSeasonNumber (tv) {
+		console.log(tv.seasons[tv.seasons.length-1].season_number);
 		return tv.seasons[tv.seasons.length-1].season_number;
 	}
 
@@ -251,24 +247,25 @@ var ButtonsController = (function () {
 				var date = new Date();
 				var airDate = Date.parse(s.episodes[i].air_date);
 				if (date < airDate || i == s.episodes.length-1) {
+					console.log(s.season_number, tv.seasons.length)
 					k.episodeNumber = s.episodes[i].episode_number;
 					k.seasonNumber =  s.season_number;
 					k.episodeName = s.episodes[i].name;
 					k.seasEpisodes = s.episodes.length;
 					k.leftToSee = null;
-					k.seasFinished = i == s.episodes.length-1 ? true : false;
+					k.seasFinished = i == s.episodes.length-1 && i != 0 ? true : false;
 					k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
 					k.episodeAirdate = k.tvsStatus != 'Ended' && !k.seasFinished ? s.episodes[i].air_date : null;
 					StorageController.setStorage(k, function(){
 						window.location.href="/Popup/popup.html";
 					});
-					i = s.episodes.length;
+					break;
 				}
 			}
 		}
 	}
 
-	function getFirstEpisodeOfSeason(r, k) {
+	function getFirstEpisodeOfSeason(r, k, flagSpecial) {
 		var date = new Date();
 		k.leftToSee = 0;			
 		// check how many new episodes are there
@@ -285,9 +282,11 @@ var ButtonsController = (function () {
 		k.seasEpisodes = r.episodes.length;
 		k.seasFinished = false;
 		k.tvsFinished = false;
-		k.episodeAirdate = k.leftToSee == 0 ? r.episodes[i].air_date : null;
+		k.episodeAirdate = k.leftToSee == 0 ? r.episodes[0].air_date : null;
 		StorageController.setStorage(k, function(){
-			window.location.href="/Popup/popup.html";
+			if (!flagSpecial) {
+				window.location.href="/Popup/popup.html";
+			}
 		});
 	}
 

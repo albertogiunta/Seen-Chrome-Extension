@@ -311,33 +311,47 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				return;
 			}
 
-			// !!!!! ATTENZIONE, QUANDO FINISCE UNA STAGIONE COME FARE?
 			k = JSON.parse(itemsSet[keySet[recordNumber]]);
 			if (k.tvsStatus != 'Ended') {
-				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, 
-					function(data) {
-						_checkTvs(data, recordNumber, keySet, itemsSet);
-					}, function() {
-				});
+				if (!k.seasFinished || !k.tvsFinished) {
+					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, 
+						function(data) {
+							_checkTvs(JSON.parse(data), recordNumber, keySet, itemsSet, k);
+						}, function() {
+					});
+				} else {
+					theMovieDb.tv.getById({"id": k.tvsId}, function(data) {
+						r = JSON.parse(data);
+						if (k.seasonNumber + 1 <= r.seasons.length) {
+							theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber+1}, 
+								function(data) {
+									ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k, true);
+									fetchUpdates(recordNumber + 1, keySet, itemsSet);
+								}, function() {
+							});
+						} else {
+							fetchUpdates(recordNumber + 1, keySet, itemsSet);
+						}
+					}, function () {})
+				}
 			} else {
 				fetchUpdates(recordNumber + 1, keySet, itemsSet);
 			}
 		}
 
-		function _checkTvs (data, recordNumber, keySet, itemsSet) {
-			var r = JSON.parse(data);
-									
+		function _checkTvs (r, recordNumber, keySet, itemsSet, k) {
 			var date = new Date();
 			
 			// check how many new episodes are there
-			for (var i = k.episodeNumber + k.leftToSee; i < r.episodes.length; i++) {
+			k.leftToSee = 0;
+			for (var i = k.episodeNumber-1; i < r.episodes.length; i++) {
 				var airDate = Date.parse(r.episodes[i].air_date);
 				if (airDate < date) {
 					k.leftToSee++;
 				}
 			}
 
-			if (k.leftToSee > 0) {
+			if (k.leftToSee > 1) {
 				k.episodeAirdate = null;
 				k.tvsFinished = false;
 				k.seasFinished = false;
@@ -402,8 +416,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
 					k.episodeNumber = 'last';
 					k.seasonNumber--;
 				} else {
-					// user got to the start of the tvs
-					// k.tvsFinished = true;
 				}
 			}
 		}		

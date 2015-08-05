@@ -2,25 +2,10 @@
 	margin: 7px 0.5px 0 0.6px !important;
 }
 
-/*table {
-	border: none !important;
-	border-color: #fff !important;
-}
-
-thead tr{
-	background-color : #fff !important;
-}*/
-
 tbody {
 	font-family: 'Vollkorn', serif !important;
 }
 
 td {
 	border: none !important;
-}
-
-.btn {
-  outline: none !important;
-  box-shadow: 0 0 0 0 #fff !important;
-  border-color: #fff !important;
 }
