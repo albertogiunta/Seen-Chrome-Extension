@@ -49,6 +49,13 @@ var OptionsDOMController = (function() {
 	}
 
 	function _htmlLinkTextFields (k) {
+		var divtip = document.createElement('div');
+		divtip.setAttribute('class', 'flex flex-center header');
+
+		var ptip = document.createElement('p');
+		ptip.setAttribute('class', 'flex-none left h6 m0');
+		ptip.innerHTML = "Smart Links TIP: (N) &#8594; TvSeries Name / (S) &#8594; n &#176; Season / (E) &#8594; n &#176; Episode</br>";
+		
 		var divsubs = document.createElement('div');
 		divsubs.setAttribute('class', 'flex flex-center');
 
@@ -60,7 +67,8 @@ var OptionsDOMController = (function() {
 		fsubs.setAttribute('id', 'subs-input');
 		fsubs.setAttribute('class', 'flex-auto h5 field not rounded');
 		fsubs.setAttribute('type', 'search');
-		fsubs.setAttribute('placeholder', k.subtitles);
+		fsubs.value = k.subtitles;
+		
 
 		var divtorrent = document.createElement('div');
 		divtorrent.setAttribute('class', 'flex flex-center');
@@ -73,7 +81,7 @@ var OptionsDOMController = (function() {
 		ftorrent.setAttribute('id', 'torrent-input');
 		ftorrent.setAttribute('class', 'flex-auto h5 field not rounded');
 		ftorrent.setAttribute('type', 'search');
-		ftorrent.setAttribute('placeholder', k.torrent);
+		ftorrent.value = k.torrent;
 
 		var divstreaming = document.createElement('div');
 		divstreaming.setAttribute('class', 'flex flex-center');
@@ -86,9 +94,11 @@ var OptionsDOMController = (function() {
 		fstreaming.setAttribute('id', 'streaming-input');
 		fstreaming.setAttribute('class', 'flex-auto h5 field not rounded');
 		fstreaming.setAttribute('type', 'search');
-		fstreaming.setAttribute('placeholder', k.streaming);
+		fstreaming.value = k.streaming;
 
 		return {
+			divtip: divtip,
+			ptip: ptip,
 			divsubs: divsubs,
 			psubs: psubs,
 			fsubs: fsubs,
@@ -148,6 +158,8 @@ var OptionsDOMController = (function() {
 				btns.pops.appendChild(btns.seasonseen);
 				btns.pops.appendChild(btns.airedseen);
 				btns.pops.appendChild(btns.deletetvs);
+			mainText.maindiv.appendChild(links.divtip);
+				links.divtip.appendChild(links.ptip);
 			mainText.maindiv.appendChild(links.divsubs);
 				links.divsubs.appendChild(links.psubs);
 				links.divsubs.appendChild(links.fsubs);
@@ -169,10 +181,18 @@ var OptionsDOMController = (function() {
 	/* ---------------------------------------------------------------------------------------------- */
 
 	function _setGeneralListeners(k, confirmbtn, deletetvs, main, links, hiddenStuff) {
+		links.fsubs.select();
 		confirmbtn.addEventListener('click', function () {
-			k.subtitles = links.fsubs.value ? links.fsubs.value : links.fsubs.getAttribute('placeholder');
-			k.torrent = links.ftorrent.value ? links.ftorrent.value : links.ftorrent.getAttribute('placeholder');
-			k.streaming = links.fstreaming.value ? links.fstreaming.value : links.fstreaming.getAttribute('placeholder');
+			k.subtitles = _getLink(links.fsubs.value);
+			k.torrent = _getLink(links.ftorrent.value);
+			k.streaming = _getLink(links.fstreaming.value);
+
+			function _getLink (value) {
+				 if (value.slice(0, 6) != 'http://') {
+					value = 'http://' + value;
+				}
+				return value;
+			}
 
 			StorageController.setStorage(k, function(){
 				window.location.href="/Popup/popup.html";

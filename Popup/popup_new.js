@@ -1,7 +1,8 @@
 /* ---------------------------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function(e) {
+	
 	/* ---------------------------------------------------------------------------------------------- */
-	/* ---------------------------------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------------------------------- */	
 	var DomController = (function() {
 		_setGeneralListeners();
 
@@ -198,7 +199,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		}
 
 		function _toggleBtns (navBtns, mainText, linkBtns, k) {
-			if (k.episodeAirdate == null) {
 				var escTvsName = k.tvsName.replace(/\s+/g, '+').toLowerCase();
 
 				_setLink(escTvsName, k.subtitles, linkBtns.subtitles());
@@ -208,22 +208,28 @@ document.addEventListener('DOMContentLoaded', function(e) {
 				function _setLink(escTvsName, link, element) {
 					reg = new RegExp(/((\(S\))|(\(E\))|(\(N\)))/);
 					linkStr = link;
-					if (reg.test(element)) {
-						linkStr = element.replace(/(\(S\))/, k.seasonNumber);
+					if (reg.test(link)) {
+						linkStr = linkStr.replace(/(\(S\))/, k.seasonNumber);
 						linkStr = linkStr.replace(/(\(E\))/, k.episodeNumber);
 						linkStr = linkStr.replace(/(\(N\))/, escTvsName);
 					}
-					element.setAttribute('href', linkStr);					
+
+					if (linkStr) {
+						element.setAttribute('href', linkStr);
+					} else {
+						// element.setAttribute('href', '#');
+					}
 				}
+			if (k.episodeAirdate == null) {
 				// navBtns.nextbtn.setAttribute('href', '#');
 
 			} else if (k.episodeNumber == 1 && k.seasonNumber == 1) {
 				navBtns.backbtn().setAttribute('data-disabled', true);
 			} else {
 				navBtns.nextbtn().setAttribute('data-disabled', true);
-				linkBtns.subtitles().setAttribute('data-disabled', true);
-				linkBtns.torrent().setAttribute('data-disabled', true);
-				linkBtns.streaming().setAttribute('data-disabled', true);
+				// linkBtns.subtitles().setAttribute('data-disabled', true);
+				// linkBtns.torrent().setAttribute('data-disabled', true);
+				// linkBtns.streaming().setAttribute('data-disabled', true);
 			}
 		}
 

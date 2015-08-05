@@ -57,7 +57,7 @@ input:focus {
 }
 
 .iconsvg {
-  animation: anima 30s ease-in infinite;
+  animation: anima 30s ease-in infinite; 
 }
 
 .iconsvg,
