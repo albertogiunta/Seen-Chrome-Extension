@@ -28,22 +28,13 @@ input:focus {
   border-width: 0 0 2px 0 !important;
 }
 
-/*.btn {
-  outline: none !important;
-  box-shadow: 0 0 0 0 #fff !important;
-  border-color: #fff !important;
-}*/
-
-
-
-
 .outlined:focus {
   box-shadow: 0 0 0 0 #fff !important;
-  border-color:  rgb(0, 31, 63) !important; 
+  border-color:  rgb(0, 31, 63) !important;
 }
 
 @keyframes anima {
-  0% {fill: #22A62B;color: #22A62B;}  
+  0% {fill: #22A62B;color: #22A62B;}
   10% {fill: #14E3E6;color: #14E3E6;}
   20%{fill: #195BEF;color: #195BEF;}
   30%{fill: #DF26D9;color: #DF26D9;}
@@ -57,7 +48,7 @@ input:focus {
 }
 
 .iconsvg {
-  animation: anima 30s ease-in infinite; 
+  animation: anima 30s ease-in infinite;
 }
 
 .iconsvg,
@@ -83,7 +74,6 @@ a:focus, .custom-btn:focus, .iconsvg:focus {
     /*outline: none !important;*/
     outline: 0;
     box-shadow: 0 0 0 0 #fff !important;
-    border-color: #ccc !important; 
+    border-color: #ccc !important;
     border-width: 0 0 2px 0 !important;
 }
-

@@ -1,4 +1,3 @@
-
 var OptionsController = (function() {
 	function viewOptionsMenu(main) {
 		var id = main.getAttribute('data-tvs');
@@ -22,7 +21,7 @@ var OptionsDOMController = (function() {
 		var links = _htmlLinkTextFields(k);
 		var btns = _htmlButtons(k);
 		_htmlAppendElements(main, mainText, links, btns);
-		
+
 		_setGeneralListeners(k, btns.confirmbtn, btns.deletechangesbtn, main, links, hiddenStuff);
 		_setButtonsListeners(k, btns.seasonseen, btns.airedseen, btns.deletetvs);
 	}
@@ -45,7 +44,7 @@ var OptionsDOMController = (function() {
 		return {
 			maindiv: maindiv,
 			pname: pname,
-		}	
+		}
 	}
 
 	function _htmlLinkTextFields (k) {
@@ -55,7 +54,7 @@ var OptionsDOMController = (function() {
 		var ptip = document.createElement('p');
 		ptip.setAttribute('class', 'flex-none left h6 m0');
 		ptip.innerHTML = "Smart Links TIP: (N) &#8594; TvSeries Name / (S) &#8594; n &#176; Season / (E) &#8594; n &#176; Episode</br>";
-		
+
 		var divsubs = document.createElement('div');
 		divsubs.setAttribute('class', 'flex flex-center');
 
@@ -68,7 +67,7 @@ var OptionsDOMController = (function() {
 		fsubs.setAttribute('class', 'flex-auto h5 field not rounded');
 		fsubs.setAttribute('type', 'search');
 		fsubs.value = k.subtitles;
-		
+
 
 		var divtorrent = document.createElement('div');
 		divtorrent.setAttribute('class', 'flex flex-center');
@@ -114,7 +113,7 @@ var OptionsDOMController = (function() {
 	function _htmlButtons (k) {
 		var pops = document.createElement('p');
 		pops.setAttribute('class', 'center mb1 h5 link-btn-container');
-			
+
 		var seasonseen = document.createElement('button');
 		var airedseen = document.createElement('button');
 
@@ -134,12 +133,12 @@ var OptionsDOMController = (function() {
 		deletetvs.setAttribute('class', 'btn btn-outline mb1 ml1 navy outlined');
 		deletetvs.innerHTML = 'Delete "' + k.tvsName + '" from collection';
 
-		var promptdiv = document.createElement('div'); 
+		var promptdiv = document.createElement('div');
 		promptdiv.setAttribute('class', 'flex mt2');
 
-		var confirmbtn = SvgController.getSvgElement(SvgController.getCheck()); 
-		var deletechangesbtn = SvgController.getSvgElement(SvgController.getCross()); 
-	
+		var confirmbtn = SvgController.getSvgElement(SvgController.getCheck());
+		var deletechangesbtn = SvgController.getSvgElement(SvgController.getCross());
+
 		return {
 			pops: pops,
 			seasonseen: seasonseen,
@@ -172,10 +171,6 @@ var OptionsDOMController = (function() {
 			mainText.maindiv.appendChild(btns.promptdiv);
 				btns.promptdiv.appendChild(btns.confirmbtn);
 				btns.promptdiv.appendChild(btns.deletechangesbtn);
-
-		// subtitles = links.fsubs.value ? links.fsubs.value : links.fsubs.getAttribute('placeholder');
-		// torrent = links.ftorrent.value ? links.ftorrent.value : links.ftorrent.getAttribute('placeholder');
-		// streaming = links.fstreaming.value ? links.fstreaming.value : links.fstreaming.getAttribute('placeholder');
 	}
 
 	/* ---------------------------------------------------------------------------------------------- */
@@ -214,7 +209,7 @@ var OptionsDOMController = (function() {
 			theMovieDb.tv.getById({"id":k.tvsId}, function(data){
 				var tv = JSON.parse(data);
 				k.tvsStatus = tv.status;
-				if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number){	
+				if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number){
 					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (k.seasonNumber+1)}, function(data) {
 						ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k, false);
 					}, function() {
@@ -287,7 +282,7 @@ var ButtonsController = (function () {
 
 	function getFirstEpisodeOfSeason(r, k, flagSpecial) {
 		var date = new Date();
-		k.leftToSee = 0;			
+		k.leftToSee = 0;
 		// check how many new episodes are there
 		for (var i = 0; i < r.episodes.length; i++) {
 			var airDate = Date.parse(r.episodes[i].air_date);
@@ -317,7 +312,3 @@ var ButtonsController = (function () {
 	}
 
 })();
-
-
-
-

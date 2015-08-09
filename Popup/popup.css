@@ -1,3 +1,8 @@
+#hidden-div {
+	font-family: 'Vollkorn', serif !important;
+	cursor: default;
+}
+
 .header {
 	font-family: 'Vollkorn', serif !important;
 	color: #aaa;
