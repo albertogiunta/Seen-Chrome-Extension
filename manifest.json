@@ -1,18 +1,18 @@
 {
     "manifest_version": 2,
-    "name": "Chrome Extension",
-    "description": "Check your tvseries progress here!",
-    "version": "1.0",
-
-    "icons": { "16": "/icon.png",
-           "48": "/icon.png",
-          "128": "/icon.png" },
-
+    "name": "Seen! Tv Episode Tracker",
+    "description": "The smartest and definitive way to keep track of your favourite tv shows' episodes!",
+    "version": "1.2.1",
+    "short_name": "Seen!",
+    "author": "Alberto Giunta",
+    "icons": {
+        "16": "/res/icon16.png",
+        "48": "/res/icon48.png",
+        "128": "/res/icon128.png"
+    },
     "browser_action": {
-        "default_icon": "/icon.png",
         "default_popup": "/Popup/popup.html"
     },
-
     "permissions": [
     	"storage"
     ]

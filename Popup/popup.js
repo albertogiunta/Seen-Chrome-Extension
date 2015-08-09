@@ -1,6 +1,26 @@
 /* ---------------------------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function(e) {
 
+
+    var onStart = (function setLinks() {
+        _getElements();
+
+        function _getElements() {
+            document.getElementById('personal').addEventListener('click', _createTabForLink);
+            document.getElementById('project').addEventListener('click', _createTabForLink);
+            document.getElementById('donation').addEventListener('click', _createTabForLink);
+        }
+
+        function _createTabForLink() {
+            if (this.href) {
+                chrome.tabs.create({
+                    active: true,
+                    url: this.href
+                });
+            }
+        }
+    })();
+
     /* ---------------------------------------------------------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
     var DomController = (function() {
@@ -247,14 +267,19 @@ document.addEventListener('DOMContentLoaded', function(e) {
             var linkBtns = document.getElementsByClassName('link-btn');
             var opts = document.getElementsByClassName('mini-tool');
             var j = -1;
+
+                    console.log(linkBtns)
             for (var i = 0; i < incrBtns.length; i++) {
+                    console.log(j)
                 if (!incrBtns[i].getAttribute('data-disabled')) {
                     incrBtns[i].addEventListener('click', _changeListener);
 
                     linkBtns[++j].addEventListener('click', _linkListener);
                     linkBtns[++j].addEventListener('click', _linkListener);
                     linkBtns[++j].addEventListener('click', _linkListener);
-                    linkBtns[++j].addEventListener('click', _linkListener);
+                    j++;
+                } else {
+                    j += 4;
                 }
 
                 if (!decrBtns[i].getAttribute('data-disabled')) {
@@ -270,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
 
         function _linkListener() {
+            console.log(this)
             if (this.href) {
                 ScrollController.setScroll();
                 chrome.tabs.create({
@@ -313,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (keySet.length == 0) {
                     document.getElementById("hidden-div").style.display = "block";
                 } else {
-                    console.log(keySet)
                     document.getElementById("hidden-div").style.display = "none";
                     fetchUpdates(0, keySet, itemsSet);
                 }
