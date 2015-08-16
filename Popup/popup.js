@@ -352,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             k = JSON.parse(itemsSet[keySet[recordNumber]]);
             if (k.tvsStatus != 'Ended') {
                 if (!k.seasFinished || !k.tvsFinished) {
+			console.log('1');
                     theMovieDb.tvSeasons.getById({
                             "id": k.tvsId,
                             "season_number": k.seasonNumber
@@ -361,6 +362,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                         },
                         function() {});
                 } else {
+			console.log('2');
                     theMovieDb.tv.getById({
                         "id": k.tvsId
                     }, function(data) {
@@ -396,8 +398,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     k.leftToSee++;
                 }
             }
+	    console.log(k.tvsName, k.leftToSee);
 
-            if (k.leftToSee > 1) {
+            if (k.leftToSee >= 1) {
                 k.episodeAirdate = null;
                 k.tvsFinished = false;
                 k.seasFinished = false;
