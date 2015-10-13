@@ -99,9 +99,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
             pNextToSee.setAttribute('class', 'center h5 m0');
             if (k.seasFinished) {
                 if (k.tvsStatus == "Ended" && k.tvsFinished) {
-                    pNextToSee.innerHTML = 'No more episodes for this tv series'
+                    pNextToSee.innerHTML = 'Not in production anymore'
                 } else {
-                    pNextToSee.innerHTML = 'Waiting for more episodes being aired'
+                    pNextToSee.innerHTML = 'In production - Waiting...'
                 }
             } else {
                 episodeNumber = (k.episodeNumber < 10 ? '0' : '') + k.episodeNumber;

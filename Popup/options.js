@@ -209,7 +209,7 @@ var OptionsDOMController = (function() {
 			theMovieDb.tv.getById({"id":k.tvsId}, function(data){
 				var tv = JSON.parse(data);
 				k.tvsStatus = tv.status;
-				if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number){
+				if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number) {
 					theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (k.seasonNumber+1)}, function(data) {
 						ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k, false);
 					}, function() {
@@ -229,7 +229,7 @@ var OptionsDOMController = (function() {
 				var r = JSON.parse(data);
 				k.tvsStatus = r.status;
 				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
-					console.log(data)
+					// console.log(data)
 					ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
 				}, function(){
 				});
@@ -262,14 +262,14 @@ var ButtonsController = (function () {
 				var date = new Date();
 				var airDate = Date.parse(s.episodes[i].air_date);
 				if (date < airDate || i == s.episodes.length-1) {
-					console.log(s.season_number, tv.seasons.length)
 					k.episodeNumber = s.episodes[i].episode_number;
 					k.seasonNumber =  s.season_number;
 					k.episodeName = s.episodes[i].name;
 					k.seasEpisodes = s.episodes.length;
 					k.leftToSee = null;
 					k.seasFinished = i == s.episodes.length-1 && i != 0 ? true : false;
-					k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
+					// k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
+					k.tvsFinished = k.seasFinished ? true : false;
 					k.episodeAirdate = k.tvsStatus != 'Ended' && !k.seasFinished ? s.episodes[i].air_date : null;
 					StorageController.setStorage(k, function(){
 						window.location.href="/Popup/popup.html";
