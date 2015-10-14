@@ -183,7 +183,8 @@ var OptionsDOMController = (function() {
 			k.streaming = _getLink(links.fstreaming.value);
 
 			function _getLink (value) {
-				 if (value.slice(0, 6) != 'http://') {
+				console.log(value);
+				 if (value.slice(0, 4) != 'http' && value.length != 0) {
 					value = 'http://' + value;
 				}
 				return value;

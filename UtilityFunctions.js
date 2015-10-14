@@ -155,7 +155,7 @@ var ScrollController = (function() {
 })();
 
 var DateController = (function() {
-	function getShortMonth(month) {
+	function _getShortMonth(month) {
 		if (month < 1 || month > 12) {
 			console.log("Month Number Exception");
 			return;
@@ -168,9 +168,8 @@ var DateController = (function() {
 	function getConvertedDate(date) {
 		// date format: 2015-10-31
 		year = date.substring(0, 4);
-		month = getShortMonth(date.substring(5, 7));
+		month = _getShortMonth(date.substring(5, 7));
 		day = date.substring(8, 10)
-		console.log(day  + " " + month + " " + year);
 		return day + " " + month + " " + year;
 	}
 

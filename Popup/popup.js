@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             } else {
                 episodeNumber = (k.episodeNumber < 10 ? '0' : '') + k.episodeNumber;
                 seasonNumber = (k.seasonNumber < 10 ? '0' : '') + k.seasonNumber;
-                pNextToSee.innerHTML = 'Next to see: <b>' + 'E' + episodeNumber + 'x' + 'S' + seasonNumber + '</b> / <i>' + k.episodeName + '</i>';
+                pNextToSee.innerHTML = 'Next: <b>' + 'E' + episodeNumber + 'x' + 'S' + seasonNumber + '</b> / <i>' + k.episodeName + '</i>';
             }
 
             episodeAirdate = k.episodeAirdate == null ? ' ' : DateController.getConvertedDate(k.episodeAirdate);
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             } else if (leftToSee != ' ') {
                 pleftToSee.innerHTML = '(<b>' + leftToSee + '</b> ep. left to see in this season)';
             } else if (!k.tvsFinished) {
-                pleftToSee.innerHTML = '(Next ep air date is: <b>' + episodeAirdate + '</b>)';
+                pleftToSee.innerHTML = '(Next ep. air date: <b>' + episodeAirdate + '</b>)';
             } else {
                 pleftToSee.innerHTML = '';
             }
