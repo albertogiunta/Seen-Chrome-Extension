@@ -138,18 +138,43 @@ var StorageController = (function() {
 })();
 
 var ScrollController = (function() {
-		function getScroll() {
-			scroll = localStorage.getItem('scroll');
-			localStorage.removeItem('scroll');
-			return scroll;
+	function getScroll() {
+		scroll = localStorage.getItem('scroll');
+		localStorage.removeItem('scroll');
+		return scroll;
+	}
+
+	function setScroll() {
+		localStorage.setItem('scroll', document.body.scrollTop);
+	}
+
+	return {
+		getScroll: getScroll,
+		setScroll: setScroll
+	}
+})();
+
+var DateController = (function() {
+	function getShortMonth(month) {
+		if (month < 1 || month > 12) {
+			console.log("Month Number Exception");
+			return;
 		}
 
-		function setScroll() {
-			localStorage.setItem('scroll', document.body.scrollTop);
-		}
+		shortMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		return shortMonth[month-1];
+	}
 
-		return {
-			getScroll: getScroll,
-			setScroll: setScroll
-		}
+	function getConvertedDate(date) {
+		// date format: 2015-10-31
+		year = date.substring(0, 4);
+		month = getShortMonth(date.substring(5, 7));
+		day = date.substring(8, 10)
+		console.log(day  + " " + month + " " + year);
+		return day + " " + month + " " + year;
+	}
+
+	return {
+		getConvertedDate: getConvertedDate
+	}
 })();

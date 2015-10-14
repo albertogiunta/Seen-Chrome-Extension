@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 pNextToSee.innerHTML = 'Next to see: <b>' + 'E' + episodeNumber + 'x' + 'S' + seasonNumber + '</b> / <i>' + k.episodeName + '</i>';
             }
 
-            episodeAirdate = k.episodeAirdate == null ? ' ' : k.episodeAirdate;
+            episodeAirdate = k.episodeAirdate == null ? ' ' : DateController.getConvertedDate(k.episodeAirdate);
             leftToSee = k.leftToSee == null ? ' ' : k.leftToSee;
 
             var pleftToSee = document.createElement('p');
