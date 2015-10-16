@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		function _successSeasonCB (data, id, name, status) {
 	        var r = JSON.parse(data);
-	        var subtitles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N)';
+	        var subtitles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)';
            	var torrent = 'https://torrentz.eu/search?q=(N)+s(S)e(E)';
 	        
 	        var seasEpisodes = r.episodes.length;

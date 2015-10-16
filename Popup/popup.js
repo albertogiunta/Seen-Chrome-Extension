@@ -113,11 +113,11 @@ document.addEventListener('DOMContentLoaded', function(e) {
             leftToSee = k.leftToSee == null ? ' ' : k.leftToSee;
 
             var pleftToSee = document.createElement('p');
-            pleftToSee.setAttribute('class', 'center h6 m0');
+            pleftToSee.setAttribute('class', 'center h6 m0 leftToSee-container');
             if (k.seasFinished) {
                 pleftToSee.innerHTML = '';
             } else if (leftToSee != ' ') {
-                pleftToSee.innerHTML = '(<b>' + leftToSee + '</b> ep. left to see in this season)';
+                pleftToSee.innerHTML = '(Episodes left: <b>' + leftToSee + '</b>)';
             } else if (!k.tvsFinished) {
                 pleftToSee.innerHTML = '(Next ep. air date: <b>' + episodeAirdate + '</b>)';
             } else {
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
         function _htmlLinkBtns() {
             var plinks = document.createElement('p');
-            plinks.setAttribute('class', 'center pb0 mb1 h6 link-btn-container');
+            plinks.setAttribute('class', 'center m0 p0 h6 link-btn-container');
 
             var subtitles = document.createElement('a');
             subtitles.setAttribute('class', 'btn button-narrow link-btn');
@@ -219,19 +219,30 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
 
         function _toggleBtns(navBtns, mainText, linkBtns, k) {
-            var escTvsName = k.tvsName.replace(/\s+/g, '+').toLowerCase();
 
-            _setLink(escTvsName, k.subtitles, linkBtns.subtitles());
-            _setLink(escTvsName, k.torrent, linkBtns.torrent());
-            _setLink(escTvsName, k.streaming, linkBtns.streaming());
+            _setLink(k.subtitles, linkBtns.subtitles());
+            _setLink(k.torrent, linkBtns.torrent());
+            _setLink(k.streaming, linkBtns.streaming());
 
-            function _setLink(escTvsName, link, element) {
-                reg = new RegExp(/((\(S\))|(\(E\))|(\(N\)))/);
+            function _setLink(link, element) {
+                var reg = new RegExp(/((\(S\))|(\(E\))|(\(N[$&+,:;=?@#|'<>.^*%!-]?\)))/);
+                var escape = new RegExp(/(\(N[$&+,:;=?@#|'<>.^*%!-]?\))/);
+                var forcedEscape = new RegExp(/(\(N[$&+,:;=?@#|'<>.^*%!-]\))/);
+                var alternativeEscape = '+';
                 linkStr = link;
                 if (reg.test(link)) {
+                    var encodedStringObj = escape.exec(linkStr);
+                    if (encodedStringObj[1].length > 3 && forcedEscape.test(encodedStringObj[1])) {
+                        var symbol = encodedStringObj[1].slice(2,3);
+                    } else {
+                        var symbol = alternativeEscape;
+                    }
+                    var escapedTvName = k.tvsName.replace(/\s+/g, symbol).toLowerCase();
+
+                    linkStr = linkStr.replace(escape, escapedTvName);
                     linkStr = linkStr.replace(/(\(S\))/, k.seasonNumber);
                     linkStr = linkStr.replace(/(\(E\))/, k.episodeNumber);
-                    linkStr = linkStr.replace(/(\(N\))/, escTvsName);
+
                 }
 
                 if (linkStr) {

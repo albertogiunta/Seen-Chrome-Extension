@@ -22,8 +22,12 @@
 	text-decoration: none !important;
 }
 
-.link-btn-container {
+/*.link-btn-container {
 	padding: 0.5rem 0 0 0;
+}*/
+
+.leftToSee-container {
+	padding: 0.2rem 0 0 0;
 }
 
 .link-btn {

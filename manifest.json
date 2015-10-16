@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Seen! Tv Series Episode Tracker",
     "description": "The smartest and definitive way to keep track of your favourite tv shows' episodes!",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "short_name": "Seen!",
     "author": "Alberto Giunta",
     "icons": {

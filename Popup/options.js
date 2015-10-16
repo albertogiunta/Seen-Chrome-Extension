@@ -53,7 +53,7 @@ var OptionsDOMController = (function() {
 
 		var ptip = document.createElement('p');
 		ptip.setAttribute('class', 'flex-none left h6 m0');
-		ptip.innerHTML = "Smart Links TIP: (N) &#8594; TvSeries Name / (S) &#8594; n &#176; Season / (E) &#8594; n &#176; Episode</br>";
+		ptip.innerHTML = "Smart Links TIP: (N-) &#8594; Escaped Name / (S) &#8594; n &#176; Season / (E) &#8594; n &#176; Episode</br>";
 
 		var divsubs = document.createElement('div');
 		divsubs.setAttribute('class', 'flex flex-center');
@@ -230,7 +230,6 @@ var OptionsDOMController = (function() {
 				var r = JSON.parse(data);
 				k.tvsStatus = r.status;
 				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
-					// console.log(data)
 					ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
 				}, function(){
 				});
