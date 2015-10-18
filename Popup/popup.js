@@ -101,25 +101,29 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (k.tvsStatus == "Ended" && k.tvsFinished) {
                     pNextToSee.innerHTML = 'Not in production anymore'
                 } else {
-                    pNextToSee.innerHTML = 'In production - Waiting...'
+                    pNextToSee.innerHTML = 'New season in production - Waiting...'
                 }
             } else {
                 episodeNumber = (k.episodeNumber < 10 ? '0' : '') + k.episodeNumber;
                 seasonNumber = (k.seasonNumber < 10 ? '0' : '') + k.seasonNumber;
-                pNextToSee.innerHTML = 'Next: <b>' + 'E' + episodeNumber + 'x' + 'S' + seasonNumber + '</b> / <i>' + k.episodeName + '</i>';
+                var episodeName = k.episodeName != '' ? ' / <i>' + k.episodeName + '</i>' : '';
+                pNextToSee.innerHTML = 'Next: <b>' + 'S' + seasonNumber + 'x' + 'E' + episodeNumber  + '</b>' + episodeName;
             }
 
-            episodeAirdate = k.episodeAirdate == null ? ' ' : DateController.getConvertedDate(k.episodeAirdate);
-            leftToSee = k.leftToSee == null ? ' ' : k.leftToSee;
+            if (k.leftToSee == null) {
+                var nextEpisodeAirdate = DateController.getConvertedDate(k.episodeAirdate);
+            }
+
+            var timeSinceAiring = DateController.getDaysDifference(k.episodeAirdate);
 
             var pleftToSee = document.createElement('p');
             pleftToSee.setAttribute('class', 'center h6 m0 leftToSee-container');
             if (k.seasFinished) {
                 pleftToSee.innerHTML = '';
-            } else if (leftToSee != ' ') {
-                pleftToSee.innerHTML = '(Episodes left: <b>' + leftToSee + '</b>)';
+            } else if (k.leftToSee != null) {
+                pleftToSee.innerHTML = 'Aired ' + timeSinceAiring + ' / Episodes left: <b>' + k.leftToSee + '</b>';
             } else if (!k.tvsFinished) {
-                pleftToSee.innerHTML = '(Next ep. air date: <b>' + episodeAirdate + '</b>)';
+                pleftToSee.innerHTML = 'TBA: <b>' + nextEpisodeAirdate + '</b> ( ' + timeSinceAiring + ')';
             } else {
                 pleftToSee.innerHTML = '';
             }
@@ -251,9 +255,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     // element.setAttribute('href', '#');
                 }
             }
-            if (k.episodeAirdate == null) {
+            
+            if (k.leftToSee != null) {
                 // navBtns.nextbtn.setAttribute('href', '#');
-
             } else if (k.episodeNumber == 1 && k.seasonNumber == 1) {
                 navBtns.backbtn().setAttribute('data-disabled', true);
             } else {
@@ -282,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
             for (var i = 0; i < incrBtns.length; i++) {
                 if (!incrBtns[i].getAttribute('data-disabled')) {
                     incrBtns[i].addEventListener('click', _changeListener);
-
                     linkBtns[++j].addEventListener('click', _linkListener);
                     linkBtns[++j].addEventListener('click', _linkListener);
                     linkBtns[++j].addEventListener('click', _linkListener);
@@ -363,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
             k = JSON.parse(itemsSet[keySet[recordNumber]]);
             if (k.tvsStatus != 'Ended') {
                 if (!k.seasFinished || !k.tvsFinished) {
-			console.log('1');
                     theMovieDb.tvSeasons.getById({
                             "id": k.tvsId,
                             "season_number": k.seasonNumber
@@ -373,7 +375,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
                         },
                         function() {});
                 } else {
-			console.log('2');
                     theMovieDb.tv.getById({
                         "id": k.tvsId
                     }, function(data) {
@@ -402,17 +403,16 @@ document.addEventListener('DOMContentLoaded', function(e) {
             var date = new Date();
 
             // check how many new episodes are there
-            k.leftToSee = 0;
+            k.leftToSee = null;
             for (var i = k.episodeNumber - 1; i < r.episodes.length; i++) {
                 var airDate = Date.parse(r.episodes[i].air_date);
                 if (airDate < date) {
                     k.leftToSee++;
                 }
             }
-	    console.log(k.tvsName, k.leftToSee);
 
             if (k.leftToSee >= 1) {
-                k.episodeAirdate = null;
+                k.episodeAirdate = r.episodes[k.episodeNumber-1].air_date;
                 k.tvsFinished = false;
                 k.seasFinished = false;
                 StorageController.setStorage(k, function() {
@@ -425,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
         /* ---------------------------------------------------------------------------------------------- */
         function changeEpisode(isIncrement, rTvs, k) {
+
             var rSeas = new Array();
             for (var i = 0; i < rTvs.seasons.length; i++) {
                 if (rTvs.seasons[i].season_number == k.seasonNumber) {
@@ -495,15 +496,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
             k.episodeName = rEpisode.name;
             k.seasEpisodes = r.episodes.length;
             k.leftToSee = null;
-            k.episodeAirdate = null;
+            k.episodeAirdate = rEpisode.air_date;
             k.seasFinished = false;
 
             var airDate = Date.parse(rEpisode.air_date);
             var date = new Date();
 
-            if (airDate > date) {
-                k.episodeAirdate = rEpisode.air_date;
-            } else {
+            if (airDate < date) {
                 for (var i = k.episodeNumber - 1; i < k.seasEpisodes; i++) {
                     var airDate = Date.parse(r.episodes[i].air_date);
                     if (airDate < date) {

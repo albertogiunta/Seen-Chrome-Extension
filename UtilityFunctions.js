@@ -165,6 +165,40 @@ var DateController = (function() {
 		return shortMonth[month-1];
 	}
 
+	function _translateTime(daysNumber) {
+		var absDaysNumber = Math.abs(daysNumber)
+		var sentence = '';
+		if (absDaysNumber < 7) {
+			dayWord = absDaysNumber == 1 ? ' day' : ' days';
+			sentence = absDaysNumber == 0 ? 'today' : absDaysNumber + dayWord;
+		} else if (Math.floor(absDaysNumber/7) < 4) {
+			var weeksNumber = Math.floor(absDaysNumber / 7);
+			var weekWord = weeksNumber == 1 ? ' week' : ' weeks';
+			var sentence = weeksNumber + weekWord;
+			if (absDaysNumber % 7 != 0) {
+				sentence = '> ' + sentence;
+			}
+		} else {
+			sentence = '> 1 month';
+		}
+
+		if (daysNumber < 0) {
+			return 'In ' + sentence;
+		} else if (daysNumber > 0) {
+			return sentence + ' ago';
+		}
+		return sentence;
+	}
+
+	function getDaysDifference(episodeAirDate) {
+		var today = new Date();
+        var episodeAirDate = episodeAirDate.split('-');
+        episodeAirDate = new Date(episodeAirDate[0], episodeAirDate[1]-1, episodeAirDate[2]);
+        today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        var diff = Math.round((today - episodeAirDate)/((1000*60*60*24)));
+		return _translateTime(diff);
+	}
+
 	function getConvertedDate(date) {
 		// date format: 2015-10-31
 		year = date.substring(0, 4);
@@ -174,6 +208,7 @@ var DateController = (function() {
 	}
 
 	return {
-		getConvertedDate: getConvertedDate
+		getConvertedDate: getConvertedDate,
+		getDaysDifference: getDaysDifference
 	}
 })();
