@@ -252,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (linkStr) {
                     element.setAttribute('href', linkStr);
                 } else {
+                    element.className += ' inactive-link'; 
                     // element.setAttribute('href', '#');
                 }
             }

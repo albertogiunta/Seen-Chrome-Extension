@@ -72,6 +72,11 @@
 	cursor: default !important;
 }
 
+.inactive-link, .inactive-link:hover, .inactive-link:focus {
+	color: #ccc !important;
+	cursor: default !important;
+}
+
 .check {
 	fill:#2ecc71;
 	color:#2ecc71;
