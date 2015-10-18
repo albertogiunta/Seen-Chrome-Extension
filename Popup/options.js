@@ -183,7 +183,6 @@ var OptionsDOMController = (function() {
 			k.streaming = _getLink(links.fstreaming.value);
 
 			function _getLink (value) {
-				console.log(value);
 				 if (value.slice(0, 4) != 'http' && value.length != 0) {
 					value = 'http://' + value;
 				}
@@ -252,7 +251,6 @@ var OptionsDOMController = (function() {
 var ButtonsController = (function () {
 
 	function getLastSeasonNumber (tv) {
-		console.log(tv.seasons[tv.seasons.length-1].season_number);
 		return tv.seasons[tv.seasons.length-1].season_number;
 	}
 
@@ -270,7 +268,7 @@ var ButtonsController = (function () {
 					k.seasFinished = i == s.episodes.length-1 && i != 0 ? true : false;
 					// k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
 					k.tvsFinished = k.seasFinished ? true : false;
-					k.episodeAirdate = k.tvsStatus != 'Ended' && !k.seasFinished ? s.episodes[i].air_date : null;
+					k.episodeAirdate = s.episodes[i].air_date;
 					StorageController.setStorage(k, function(){
 						window.location.href="/Popup/popup.html";
 					});
@@ -297,7 +295,7 @@ var ButtonsController = (function () {
 		k.seasEpisodes = r.episodes.length;
 		k.seasFinished = false;
 		k.tvsFinished = false;
-		k.episodeAirdate = k.leftToSee == 0 ? r.episodes[0].air_date : null;
+		k.episodeAirdate = r.episodes[0].air_date;
 		StorageController.setStorage(k, function(){
 			if (!flagSpecial) {
 				window.location.href="/Popup/popup.html";

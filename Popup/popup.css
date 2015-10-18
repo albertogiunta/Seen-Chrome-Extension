@@ -77,6 +77,10 @@
 	cursor: default !important;
 }
 
+.hidden {
+	visibility: hidden !important;
+}
+
 .check {
 	fill:#2ecc71;
 	color:#2ecc71;

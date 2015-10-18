@@ -38,13 +38,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
                     var navBtns = _htmlNavigationBtns();
                     var mainText = _htmlMainTexts(k);
-                    var linkBtns = _htmlLinkBtns();
+                    var linkBtns = _htmlLinkBtns(k);
 
                     _toggleBtns(navBtns, mainText, linkBtns, k);
 
-                    _htmlAppendElements(main, navBtns, mainText, linkBtns);
+                    _htmlAppendElements(main, navBtns, mainText, linkBtns, k);
 
                 }
+
                 _setTvsListeners(main);
                 document.body.scrollTop = ScrollController.getScroll();
             });
@@ -204,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             }
         }
 
-        function _htmlAppendElements(main, navBtns, mainText, linkBtns) {
+        function _htmlAppendElements(main, navBtns, mainText, linkBtns, k) {
             main.appendChild(mainText.container());
             mainText.container().appendChild(navBtns.backbtn());
             mainText.container().appendChild(mainText.maindiv());
@@ -212,12 +213,16 @@ document.addEventListener('DOMContentLoaded', function(e) {
             mainText.maindiv().appendChild(mainText.pNextToSee());
             mainText.maindiv().appendChild(mainText.pleftToSee());
             mainText.maindiv().appendChild(linkBtns.plinks());
-            linkBtns.plinks().appendChild(linkBtns.subtitles());
-            linkBtns.plinks().appendChild(document.createTextNode('/'));
-            linkBtns.plinks().appendChild(linkBtns.torrent());
-            linkBtns.plinks().appendChild(document.createTextNode('/'));
-            linkBtns.plinks().appendChild(linkBtns.streaming());
-            linkBtns.plinks().appendChild(document.createTextNode('/'));
+
+            if (k.leftToSee != null) {
+                linkBtns.plinks().appendChild(linkBtns.subtitles());
+                linkBtns.plinks().appendChild(document.createTextNode('/'));
+                linkBtns.plinks().appendChild(linkBtns.torrent());
+                linkBtns.plinks().appendChild(document.createTextNode('/'));
+                linkBtns.plinks().appendChild(linkBtns.streaming());
+                linkBtns.plinks().appendChild(document.createTextNode('/'));
+            }
+
             linkBtns.plinks().appendChild(linkBtns.options());
             mainText.container().appendChild(navBtns.nextbtn());
         }
@@ -287,12 +292,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
             for (var i = 0; i < incrBtns.length; i++) {
                 if (!incrBtns[i].getAttribute('data-disabled')) {
                     incrBtns[i].addEventListener('click', _changeListener);
-                    linkBtns[++j].addEventListener('click', _linkListener);
-                    linkBtns[++j].addEventListener('click', _linkListener);
-                    linkBtns[++j].addEventListener('click', _linkListener);
+                    if (linkBtns[j+1] != undefined) {
+                        linkBtns[++j].addEventListener('click', _linkListener);
+                        linkBtns[++j].addEventListener('click', _linkListener);
+                        linkBtns[++j].addEventListener('click', _linkListener);
+                    }
                     j++;
                 } else {
-                    j += 4;
+                    j += 1;
                 }
 
                 if (!decrBtns[i].getAttribute('data-disabled')) {
@@ -491,7 +498,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 
         function _successSeasonCB(k, r) {
-            k.episodeNumber = k.episodeNumber == 'last' || (k.tvsFinished && k.leftToSee == null) ? r.episodes.length : k.episodeNumber;
+            k.episodeNumber = k.episodeNumber == 'last' 
+                            || (k.tvsFinished && k.leftToSee == null) ? r.episodes.length : k.episodeNumber;
             rEpisode = r.episodes[k.episodeNumber - 1];
 
             k.episodeName = rEpisode.name;
