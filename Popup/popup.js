@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 
     var onStart = (function setLinks() {
-        _getElements();
+        // _getElements();
 
         function _getElements() {
             document.getElementById('personal').addEventListener('click', _createTabForLink);
@@ -277,9 +277,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
         /* ---------------------------------------------------------------------------------------------- */
         function _setGeneralListeners() {
             // if + btn is clicked, the page is redirected to the search html page
-            document.getElementById('add-btn').addEventListener('click', function() {
-                window.location.href = "/Result/result.html";
-            });
+            // document.getElementById('add-btn').addEventListener('click', function() {
+            //     window.location.href = "/Result/result.html";
+            // });
         }
 
         function _setTvsListeners(main) {
