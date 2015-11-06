@@ -16,11 +16,6 @@ header {
 	cursor: default;
 }
 
-/*.spacekeeper-top {
-	top: 0 !important;
-	height: 5px;
-}*/
-
 .header:hover {
 	filter: alpha(opacity=100);
 	opacity: 1;
@@ -44,7 +39,7 @@ body {
 	cursor: default;
 }
 
-/***********  ***********/
+/*********** TV SERIES LINE ***********/
 
 
 .leftToSee-container {
@@ -115,6 +110,22 @@ body {
 #subs-input, #torrent-input, #streaming-input {
 	margin: 0 !important;
 	padding: 0 !important;
+}
+
+.settings {
+    width: 20px;
+    float: left;
+    margin-top: 3px;
+    margin-right: 5px
+}
+
+td {
+    padding: 0px 2px  !important;
+}
+
+svg:hover {
+    fill: white !important;
+    transition: 1s;
 }
 
 /*********** FOOTER ***********/
