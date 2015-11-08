@@ -1,7 +1,7 @@
 body {
     width: 400px;
     height: 300px;
-    margin: 10px;
+    margin: 0 10px 0 5px;
     overflow: hidden;
     overflow-y: scroll;
     overflow-x: scroll;
@@ -71,9 +71,9 @@ input:focus {
 }
 
 a:focus, .custom-btn:focus, .iconsvg:focus {
-    /*outline: none !important;*/
-    outline: 0;
+    outline: none !important;
+    outline: 0 !important;
     box-shadow: 0 0 0 0 #fff !important;
-    border-color: #ccc !important;
-    border-width: 0 0 2px 0 !important;
+    border-color: #fff !important;
+    /*border-width: 0 !important;*/
 }
