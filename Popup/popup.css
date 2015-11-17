@@ -31,6 +31,10 @@ header {
 	text-decoration: none !important;
 }
 
+.spacekeeper-top {
+    margin-bottom: 30px;
+}
+
 /*********** BODY ***********/
 body {
 }
@@ -65,14 +69,12 @@ td {
     padding: 0px 2px  !important;
 }
 
-svg {
+.left, .right, .double-left, .double-right, .options-btn {
     fill: #ccc;
 }
 
-svg:hover {
+.left:hover, .right:hover, .double-left:hover, .double-right:hover, .options-btn:hover {
     fill: #001F3F;
-/*    filter: alpha(opacity=30);
-    opacity: 0.3;*/
     -webkit-transition: .2s ease-in-out;
     cursor: pointer;
 }
@@ -92,19 +94,38 @@ svg:hover {
 
 
 /*********** TV SERIES SETTINGS ***********/
-.check {
-    fill:#2ecc71;
-    color:#2ecc71;
+.options svg {
+    width: 25px;
+    /*filter: alpha(opacity=10);*/
+    /*opacity: .5;*/
 }
 
-.cross {
-    fill:#e74c3c;
-    color:#e74c3c;
+.archive {
+    fill: #7FDBFF;
 }
 
-#subs-input, #torrent-input, #streaming-input {
-    margin: 0 !important;
-    padding: 0 !important;
+.trash {
+    fill: #FF4136;
+}
+
+.close {
+    fill: #FF4136;
+}
+
+.confirm {
+    fill: #01FF70;
+}
+
+.archive:hover, .trash:hover, .close:hover, .confirm:hover {
+    /*filter: alpha(opacity=100);*/
+    /*opacity: 1;*/
+    /*-webkit-transition: opacity .2s ease-in-out;*/
+    cursor: pointer;
+}
+
+input {
+    width: 92% !important;
+    height: 1.7rem !important;
 }
 
 .hidden {
@@ -124,5 +145,4 @@ svg:hover {
     bottom:0;
     left: 0;
     text-align:center;
-    /*background-color: white;*/
 }

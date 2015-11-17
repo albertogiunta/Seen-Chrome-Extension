@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
           
             // <div class="flex mt3 " data-tvs="1413">
             var container = document.createElement('div');
-            container.setAttribute('class', 'flex mt3');
+            container.setAttribute('class', 'flex mt2');
             container.setAttribute('data-tvs', k.tvsId);
 
             container.appendChild(mainText.text);
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
                 opts[i].addEventListener('click', function() {
                     ScrollController.setScroll();
-                    var main = this.parentNode.parentNode.parentNode;
+                    var main = this.parentNode.parentNode;
                     OptionsController.viewOptionsMenu(main);
                 });
             }

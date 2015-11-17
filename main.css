@@ -1,5 +1,5 @@
 body {
-    width: 400px;
+    width: 500px;
     height: 300px;
     margin: 0 10px 0 5px;
     overflow: hidden;
@@ -49,25 +49,6 @@ input:focus {
 
 .iconsvg {
   animation: anima 30s ease-in infinite;
-}
-
-.iconsvg,
-.im {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  display: block;
-  margin: auto;
-}
-
-.iconsvg:after,
-.im:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
 }
 
 a:focus, .custom-btn:focus, .iconsvg:focus {
