@@ -2,10 +2,29 @@
 	margin: 7px 0.5px 0 0.6px !important;
 }
 
+svg {
+    width: 25px !important;
+    padding: 0 10px;
+}
+
+#close svg {
+    fill: #FF4136;
+}
+
+#search svg {
+    fill:#01FF70;
+}
+
+.add svg {
+    fill: aqua;
+    margin-top: -7px;
+}
+
 tbody {
 	font-family: 'Vollkorn', serif !important;
 }
 
 td {
 	border: none !important;
+    padding: 0;
 }

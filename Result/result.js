@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	var DomController = (function() {
 
 		var r; // variable for search results (return by theMovieDb)
+		var s =  _getSorting();
+		var sorting = s != null ? s : 'popularity';
 		_setGeneralListeners();
 
 		function renderSearch(data) {
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				_setTitle(searchForm.value);
 				_resetPage(searchForm, main);
+				
 				_createResultsTable();
 
 				_setAdditionBtnsListeners();
@@ -64,6 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			_createResultList(_remapResults(), tbody); // creating the result list
 		}
 
+		
+
 		function _createResultList (data, tbody) {
 			for (var i = 0; i < data.length; i++) {
 			    var row =  document.createElement("tr");
@@ -97,16 +102,36 @@ document.addEventListener('DOMContentLoaded', function() {
 			    tvs[i].id = "" + r.results[i].id; 								// set id
 			    tvs[i].name = r.results[i].name; 								// set name
 			    var date = r.results[i].first_air_date;							
-			    tvs[i].year = date ? " (" + date.substring(0,4) + ") " : "";	// set year
+			    tvs[i].year = date ? date.substring(0,4) : "";	// set year
+			    tvs[i].popularity = r.results[i].popularity;
+			}
+			
+			return _sortResults(tvs);
+		}
+
+		function _sortResults (tvs) {
+			if (sorting == 'alphabetical') {
+				tvs.sort(function(a, b) {
+					return (a.name).localeCompare(b.name);
+				});
+			} else if (sorting == 'popularity') {
+				tvs.sort(function(a, b) {
+					return parseFloat(b.popularity) - parseFloat(a.popularity);
+				});
+			} else if (sorting == 'year') {
+				tvs.sort(function(a, b) {
+					return parseInt(b.year) - parseInt(a.year);
+				});
 			}
 			return tvs;
 		}
 
 		/* ---------------------------------------------------------------------------------------------- */
 		function _setGeneralListeners() {
-
+			
+			
 			// if the search button  is clicked it will fire a search		
-			document.getElementById("search-btn").addEventListener('click', function() {
+			document.getElementById("search").addEventListener('click', function() {
 				SearchController.search();
 			});
 
@@ -124,10 +149,67 @@ document.addEventListener('DOMContentLoaded', function() {
 			    }
 			};
 
-			// if the back button is clicked it will redirect to the main html page
-			document.getElementById('back-btn').addEventListener('click', function() {
-			    window.location.href="/Popup/popup.html";
+			document.getElementById('alphabetical').addEventListener('click', function() {
+				sorting = 'alphabetical';
+				_setSorting(sorting);
+				_toggleSorting(true, false, false);
 			});
+
+			document.getElementById('popularity').addEventListener('click', function() {
+				sorting = 'popularity';
+				_setSorting(sorting);
+				_toggleSorting(false, true, false);
+			});
+
+			document.getElementById('year').addEventListener('click', function() {
+				sorting = 'year';
+				_setSorting(sorting);
+				_toggleSorting(false, false, true);
+			});
+
+			_toggleSorting(s == 'alphabetical', s == 'popularity', s == 'year');
+
+			function _toggleSorting(isAlphabetical, isPopularity, isByYear) {
+				var alph = document.getElementById('alphabetical');
+				var pop = document.getElementById('popularity');
+				var year = document.getElementById('year');
+
+				if (isAlphabetical) {
+					_toggler(alph, pop, year);
+				} else if (isPopularity) {
+					_toggler(pop, alph, year);
+				} else if (isByYear) {
+					_toggler(year, alph, pop);
+				}
+
+				function _toggler(toggle, untoggle1, untoggle2) {
+					toggle.className = toggle.className.replace( /(?:^|\s)link(?!\S)/g , '' );
+					untoggle1.className += !untoggle1.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
+					untoggle2.className += !untoggle2.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
+				}
+				if (r != undefined) {
+					var main = document.getElementById('main');
+					var searchForm =  document.getElementById('search-input');
+					_resetPage(searchForm, main);
+					_createResultsTable();
+					_setAdditionBtnsListeners();
+				}
+
+			}
+
+			// if the back button is clicked it will redirect to the main html page
+			// document.getElementById('close').addEventListener('click', function() {
+			//     window.location.href="/Popup/popup.html";
+			// });
+		}
+
+		function _setSorting(sorting) {
+			localStorage.setItem("sortingResult", sorting);
+		}
+
+		function _getSorting() {
+			sorting = localStorage.getItem('sortingResult');
+			return sorting;
 		}
 
 		function _setAdditionBtnsListeners() {

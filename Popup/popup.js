@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
           
             // <div class="flex mt3 " data-tvs="1413">
             var container = document.createElement('div');
-            container.setAttribute('class', 'flex mt2');
+            container.setAttribute('class', 'flex tvscontainer');
             container.setAttribute('data-tvs', k.tvsId);
 
             container.appendChild(mainText.text);
@@ -265,7 +265,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
             // TODO check what's going on here
             if (k.leftToSee != null) {
-                // navBtns.nextbtn.setAttribute('href', '#');
+                if (k.episodeNumber == 1 && k.seasonNumber == 1) {
+                    navBtns.backbtn.setAttribute('data-disabled', true);
+                }
             } else if (k.episodeNumber == 1 && k.seasonNumber == 1) {
                 navBtns.backbtn.setAttribute('data-disabled', true);
             } else {
@@ -308,11 +310,12 @@ document.addEventListener('DOMContentLoaded', function(e) {
                         linkBtns[j+1].addEventListener('click', _linkListener);
                         linkBtns[j+2].addEventListener('click', _linkListener);
                     }
+
+                    incrBtns[i].addEventListener('click', _changeListener);
+                    doubleIncrBtns[i].addEventListener('click', _changeListener);
                 }
                 j += 3
 
-                incrBtns[i].addEventListener('click', _changeListener);
-                doubleIncrBtns[i].addEventListener('click', _changeListener);
 
                 if (!decrBtns[i].getAttribute('data-disabled')) {
                     decrBtns[i].addEventListener('click', _changeListener);
@@ -374,9 +377,20 @@ document.addEventListener('DOMContentLoaded', function(e) {
             chrome.storage.sync.get(null, function(itemsSet) {
                 keySet = Object.keys(itemsSet);
                 if (keySet.length == 0) {
-                    document.getElementById("hidden-div").style.display = "block";
+                    // <div id="" class="flex m0">
+                    //     <a id="hidden-div" class="flex-auto center btn block p0 h3 link" href="/Result/result.html"></p>
+                    // </div>
+                    var div = document.createElement('div');
+                    div.setAttribute('class', 'flex m0');
+                    var link = document.createElement('a');
+                    link.setAttribute('class', 'hidden-div flex-auto center block btn p0 h3 link');
+                    link.setAttribute('href', '/Result/result.html');
+                    link.innerHTML = "START HERE!"
+                    div.appendChild(link);
+
+                    var body = document.body;
+                    body.insertBefore(div, body.childNodes[4]);
                 } else {
-                    document.getElementById("hidden-div").style.display = "none";
                     fetchUpdates(0, keySet, itemsSet);
                 }
             });

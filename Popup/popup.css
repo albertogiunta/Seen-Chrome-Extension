@@ -1,54 +1,25 @@
-/*********** HEADER ***********/
-header {
-	position: fixed;
-	width:99%;
-    top:0;
-    background-color: white;
-}
-
-.header {
-	/*font-family: 'Vollkorn', serif !important;*/
-	color: #aaa;
-	letter-spacing: .2em;
-	font-size: 0.65
-    left: 0;
-}
-
-.link {
-    filter: alpha(opacity=30);
-    opacity: 0.3;
-    -webkit-transition: opacity .1s ease-in-out;
-    cursor: default;
-}
-
-.link:hover {
-	filter: alpha(opacity=100);
-	opacity: 1;
-}
-
-.header-link {
-	color: #444;
-	text-decoration: none !important;
-}
-
-.spacekeeper-top {
-    margin-bottom: 30px;
-}
-
 /*********** BODY ***********/
-body {
-}
-
 .main {
 	margin-top: 30px;
 }
 
-#hidden-div {
-	font-family: 'Vollkorn', serif !important;
-	cursor: default;
+.hidden-div {
+    margin-top: 30px !important;
+	cursor: pointer;
 }
 
 /*********** TV SERIES LINE ***********/
+.tvscontainer {
+    background-color: white;
+    -webkit-transition: .1s ease-in-out;
+    margin-top: 1.3rem;
+}
+
+.tvscontainer:hover {
+    background-color: #f2f2f2;
+    -webkit-transition: .1s ease-in-out;
+}
+
 .settings-btn {
     width: 20px;
     float: left;
@@ -70,7 +41,7 @@ td {
 }
 
 .left, .right, .double-left, .double-right, .options-btn {
-    fill: #ccc;
+    fill: #bfbfbf;
 }
 
 .left:hover, .right:hover, .double-left:hover, .double-right:hover, .options-btn:hover {
@@ -80,24 +51,26 @@ td {
 }
 
 .inactive-btn, .inactive-btn:hover, .inactive-btn:focus {
-    color: #ccc !important;
-    border-color: #ccc !important;
+    color: #bfbfbf !important;
+    border-color: #bfbfbf !important;
     box-shadow: none !important;
     outline: none !important;
     cursor: default !important;
 }
 
 .inactive-link, .inactive-link:hover, .inactive-link:focus {
-    color: #ccc !important;
+    color: #bfbfbf !important;
     cursor: default !important;
 }
 
 
 /*********** TV SERIES SETTINGS ***********/
+.optcontainer {
+    margin-top: 1.3rem;
+}
+
 .options svg {
     width: 25px;
-    /*filter: alpha(opacity=10);*/
-    /*opacity: .5;*/
 }
 
 .archive {
@@ -117,15 +90,7 @@ td {
 }
 
 .archive:hover, .trash:hover, .close:hover, .confirm:hover {
-    /*filter: alpha(opacity=100);*/
-    /*opacity: 1;*/
-    /*-webkit-transition: opacity .2s ease-in-out;*/
     cursor: pointer;
-}
-
-input {
-    width: 92% !important;
-    height: 1.7rem !important;
 }
 
 .hidden {
@@ -145,4 +110,5 @@ input {
     bottom:0;
     left: 0;
     text-align:center;
+    background-color: white;
 }

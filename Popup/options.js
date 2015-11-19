@@ -1,7 +1,7 @@
 var OptionsController = (function() {
 	function viewOptionsMenu(main) {
 		var id = main.getAttribute('data-tvs');
-		main.setAttribute('class', 'mt3')
+		main.setAttribute('class', 'optcontainer')
 		chrome.storage.sync.get(id, function(obj) {
 			var k = JSON.parse(obj[id]);
 			OptionsDOMController.renderOptionsMenu(k, main);
@@ -160,7 +160,7 @@ var OptionsDOMController = (function() {
 		});
 
 		deletechangesbtn.addEventListener('click', function() {
-			main.setAttribute('class', 'flex mt3')
+			main.setAttribute('class', 'flex optcontainer')
 			while (main.firstChild) {
 				main.removeChild(main.firstChild);
 			}
