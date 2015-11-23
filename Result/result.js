@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	var DomController = (function() {
 
 		var r; // variable for search results (return by theMovieDb)
-		var s =  _getSorting();
-		var sorting = s != null ? s : 'popularity';
+		
+		var fieldName = 'sortingResult';
+		SortController.toggleSorting(fieldName, null)
+		
 		_setGeneralListeners();
 
 		function renderSearch(data) {
@@ -106,25 +108,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			    tvs[i].popularity = r.results[i].popularity;
 			}
 			
-			return _sortResults(tvs);
+			return SortController.sort(tvs, null, fieldName);
 		}
 
-		function _sortResults (tvs) {
-			if (sorting == 'alphabetical') {
-				tvs.sort(function(a, b) {
-					return (a.name).localeCompare(b.name);
-				});
-			} else if (sorting == 'popularity') {
-				tvs.sort(function(a, b) {
-					return parseFloat(b.popularity) - parseFloat(a.popularity);
-				});
-			} else if (sorting == 'year') {
-				tvs.sort(function(a, b) {
-					return parseInt(b.year) - parseInt(a.year);
-				});
-			}
-			return tvs;
-		}
+		// function _sortResults (tvs) {
+		// 	if (sorting == 'alphabetical') {
+		// 		tvs.sort(function(a, b) {
+		// 			return (a.name).localeCompare(b.name);
+		// 		});
+		// 	} else if (sorting == 'popularity') {
+		// 		tvs.sort(function(a, b) {
+		// 			return parseFloat(b.popularity) - parseFloat(a.popularity);
+		// 		});
+		// 	} 
+		// 	return tvs;
+		// }
 
 		/* ---------------------------------------------------------------------------------------------- */
 		function _setGeneralListeners() {
@@ -150,67 +148,69 @@ document.addEventListener('DOMContentLoaded', function() {
 			};
 
 			document.getElementById('alphabetical').addEventListener('click', function() {
-				sorting = 'alphabetical';
-				_setSorting(sorting);
-				_toggleSorting(true, false, false);
+				SortController.toggleSorting(fieldName, 'alphabetical')
+				_refreshTable();
 			});
 
 			document.getElementById('popularity').addEventListener('click', function() {
-				sorting = 'popularity';
-				_setSorting(sorting);
-				_toggleSorting(false, true, false);
+				SortController.toggleSorting(fieldName, 'popularity')		
+				_refreshTable();
 			});
 
 			document.getElementById('year').addEventListener('click', function() {
-				sorting = 'year';
-				_setSorting(sorting);
-				_toggleSorting(false, false, true);
+				SortController.toggleSorting(fieldName, 'year')
+				_refreshTable();
 			});
+		}
 
-			_toggleSorting(s == 'alphabetical', s == 'popularity', s == 'year');
-
-			function _toggleSorting(isAlphabetical, isPopularity, isByYear) {
-				var alph = document.getElementById('alphabetical');
-				var pop = document.getElementById('popularity');
-				var year = document.getElementById('year');
-
-				if (isAlphabetical) {
-					_toggler(alph, pop, year);
-				} else if (isPopularity) {
-					_toggler(pop, alph, year);
-				} else if (isByYear) {
-					_toggler(year, alph, pop);
-				}
-
-				function _toggler(toggle, untoggle1, untoggle2) {
-					toggle.className = toggle.className.replace( /(?:^|\s)link(?!\S)/g , '' );
-					untoggle1.className += !untoggle1.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
-					untoggle2.className += !untoggle2.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
-				}
-				if (r != undefined) {
-					var main = document.getElementById('main');
-					var searchForm =  document.getElementById('search-input');
-					_resetPage(searchForm, main);
-					_createResultsTable();
-					_setAdditionBtnsListeners();
-				}
-
+		function _refreshTable () {
+			if (r != undefined) {
+				var main = document.getElementById('main');
+				var searchForm =  document.getElementById('search-input');
+				_resetPage(searchForm, main);
+				_createResultsTable();
+				_setAdditionBtnsListeners();
 			}
+		}
+
+
+			// _toggleSorting(s == 'alphabetical', s == 'popularity', s == 'year');
+
+			// function _toggleSorting(isAlphabetical, isPopularity, isByYear) {
+			// 	var alph = document.getElementById('alphabetical');
+			// 	var pop = document.getElementById('popularity');
+			// 	var year = document.getElementById('year');
+
+			// 	if (isAlphabetical) {
+			// 		_toggler(alph, pop, year);
+			// 	} else if (isPopularity) {
+			// 		_toggler(pop, alph, year);
+			// 	} else if (isByYear) {
+			// 		_toggler(year, alph, pop);
+			// 	}
+
+			// 	function _toggler(toggle, untoggle1, untoggle2) {
+			// 		toggle.className = toggle.className.replace( /(?:^|\s)link(?!\S)/g , '' );
+			// 		untoggle1.className += !untoggle1.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
+			// 		untoggle2.className += !untoggle2.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
+			// 	}
+		
+			// }
 
 			// if the back button is clicked it will redirect to the main html page
 			// document.getElementById('close').addEventListener('click', function() {
 			//     window.location.href="/Popup/popup.html";
 			// });
-		}
+		// }
 
-		function _setSorting(sorting) {
-			localStorage.setItem("sortingResult", sorting);
-		}
+		// function _setSorting(sorting) {
+		// 	localStorage.setItem("sortingResult", sorting);
+		// }
 
-		function _getSorting() {
-			sorting = localStorage.getItem('sortingResult');
-			return sorting;
-		}
+		// function _getSorting() {
+		// 	sorting = localStorage.getItem('sortingResult');
+		// 	return sorting;
+		// }
 
 		function _setAdditionBtnsListeners() {
 			// listener for every "add to collection" button		
@@ -302,30 +302,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	            }
 	        }
 
-	        var save = id, selectedValues = JSON.stringify({'tvsName': name, 
-                                                              'tvsId': id, 
-                                                              'episodeNumber': r.episodes[0].episode_number,
-                                                              'seasonNumber': r.episodes[0].season_number,
-                                                              'episodeName': r.episodes[0].name,
-                                                              'seasEpisodes': seasEpisodes,
-                                                              'leftToSee': leftToSee,
-                                                              'episodeAirdate': r.episodes[0].air_date,
-                                                              'tvsStatus': status,
-                                                              'seasFinished': false,
-                                                              'tvsFinished': false,
-                                                              'subtitles': subtitles,
-                                                              'torrent': torrent,
-                                                              'streaming': ''});
+        	var selectedValues = JSON.stringify({'tvsName': name, 
+                                                          'tvsId': id, 
+                                                          'episodeNumber': r.episodes[0].episode_number,
+                                                          'seasonNumber': r.episodes[0].season_number,
+                                                          'episodeName': r.episodes[0].name,
+                                                          'seasEpisodes': seasEpisodes,
+                                                          'leftToSee': leftToSee,
+                                                          'episodeAirdate': r.episodes[0].air_date,
+                                                          'tvsStatus': status,
+                                                          'seasFinished': false,
+                                                          'tvsFinished': false,
+                                                          'subtitles': subtitles,
+                                                          'torrent': torrent,
+                                                          'streaming': ''});
 
 	        var jsonfile = {};
-	        jsonfile[save] = selectedValues;
+	        jsonfile[id] = selectedValues;
 	        chrome.storage.sync.set(jsonfile, function() {});
 	        window.location.href="/Popup/popup.html";
-
 		}
 
 		function _errorSeasonCB (data) {
-
 		}
 
 		return {

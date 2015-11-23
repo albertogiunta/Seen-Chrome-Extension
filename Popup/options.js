@@ -52,16 +52,16 @@ var OptionsDOMController = (function() {
 		var divtextfieldscontainer = document.createElement('div');
 		divtextfieldscontainer.setAttribute('class', 'mt1 navy flex-auto ml0');
 
-		divtextfieldscontainer.appendChild(_getTextField('T', 'torrent-input ' + k.tvsId));
-		divtextfieldscontainer.appendChild(_getTextField('S', 'streaming-input '+ k.tvsId));
-		divtextfieldscontainer.appendChild(_getTextField('S', 'subtitles-input '+ k.tvsId));
+		divtextfieldscontainer.appendChild(_getTextField('Torrent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 'torrent-input ' + k.tvsId));
+		divtextfieldscontainer.appendChild(_getTextField('Streaming', 'streaming-input '+ k.tvsId));
+		divtextfieldscontainer.appendChild(_getTextField('Subtitles&nbsp;&nbsp;&nbsp;', 'subtitles-input '+ k.tvsId));
 
 		function _getTextField(label, id) {
 			var div = document.createElement('div');
-			div.setAttribute('class', '');
+			// div.setAttribute('class', '');
 
 			var p = document.createElement('p');
-			p.setAttribute('class', 'left m0 h5');
+			p.setAttribute('class', 'left m0 h6 gray');
 			p.innerHTML = label;
 
 			var input = document.createElement('input');
@@ -90,7 +90,7 @@ var OptionsDOMController = (function() {
 	function _htmlButtons (k) {
 
 		var divleftbtnscontainer = document.createElement('div');
-		divleftbtnscontainer.setAttribute('class', 'options ml2 mt1 col-1');
+		divleftbtnscontainer.setAttribute('class', 'options ml2 mt1 mr1 col-1');
 		var archivetvs = SvgController.getSvgElement(SvgController.getArchive());
 		var deletetvs = SvgController.getSvgElement(SvgController.getTrash());
 		divleftbtnscontainer.appendChild(archivetvs);
@@ -170,39 +170,6 @@ var OptionsDOMController = (function() {
 		});
 	}
 
-	function _setButtonsListeners(k, seasonseen, airedseen, deletetvs) {
-		// seasonseen.addEventListener('click', function () {
-		// 	theMovieDb.tv.getById({"id":k.tvsId}, function(data){
-		// 		var tv = JSON.parse(data);
-		// 		k.tvsStatus = tv.status;
-		// 		if (k.seasonNumber+1 <= tv.seasons[tv.seasons.length-1].season_number) {
-		// 			theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": (k.seasonNumber+1)}, function(data) {
-		// 				ButtonsController.getFirstEpisodeOfSeason(JSON.parse(data), k, false);
-		// 			}, function() {
-		// 			});
-		// 		} else {
-		// 			theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": k.seasonNumber}, function (data) {
-		// 				ButtonsController.getLastAiredEpisodeInSeason(tv, JSON.parse(data), k);
-		// 			}, function(){
-		// 			});
-		// 		}
-		// 	}, function(){
-		// 	});
-		// });
-
-		// airedseen.addEventListener('click', function () {
-		// 	theMovieDb.tv.getById({"id": k.tvsId}, function(data) {
-		// 		var r = JSON.parse(data);
-		// 		k.tvsStatus = r.status;
-		// 		theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
-		// 			ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
-		// 		}, function(){
-		// 		});
-		// 	}, function(){
-		// 	});
-		// });
-	}
-
 	return {
 		renderOptionsMenu: renderOptionsMenu
 	}
@@ -224,10 +191,10 @@ var ButtonsController = (function () {
 					k.seasonNumber =  s.season_number;
 					k.episodeName = s.episodes[i].name;
 					k.seasEpisodes = s.episodes.length;
-					k.leftToSee = null;
 					k.seasFinished = i == s.episodes.length-1 && i != 0 ? true : false;
-					// k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
-					k.tvsFinished = k.seasFinished ? true : false;
+					k.tvsFinished = k.seasFinished && k.tvsStatus == 'Ended' ? true : false;
+					// k.tvsFinished = k.seasFinished ? true : false;
+					k.leftToSee = null;
 					k.episodeAirdate = s.episodes[i].air_date;
 					StorageController.setStorage(k, function(){
 						window.location.href="/Popup/popup.html";

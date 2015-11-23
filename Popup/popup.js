@@ -44,8 +44,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
             // Iterates the tv series currently stored (not archived)
             chrome.storage.sync.get(null, function(items) {
                 var keys = Object.keys(items);
+                var tvs = SortController.sort(items, keys, 'sortingMainpage')
                 for (var i = 0; i < keys.length; i++) {
-                    var k = JSON.parse(items[keys[i]]);
+                    var k = tvs[i];
+                    console.log(k.episodeAirdate)
 
                     var navBtns = _htmlNavigationBtns();
                     var mainText = _htmlMainTexts(k);
@@ -137,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (k.tvsStatus == "Ended" && k.tvsFinished) {
                     pNextToSee.innerHTML = 'Not in production anymore'
                 } else {
-                    pNextToSee.innerHTML = 'New season in production - Waiting...'
+                    pNextToSee.innerHTML = 'The season has ended or we don\'t have enough data regarding the next episode.';
                 }
             } else {
                 episodeNumber = (k.episodeNumber < 10 ? '0' : '') + k.episodeNumber;
@@ -185,15 +187,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
             var classAttributes = 'btn block p0 m0 h5 link link-btn';
             var subtitles = document.createElement('a');
             subtitles.setAttribute('class', classAttributes);
-            subtitles.innerHTML = 'S';
+            subtitles.innerHTML = 'SUB';
 
             var torrent = document.createElement('a');
             torrent.setAttribute('class', classAttributes);
-            torrent.innerHTML = 'T';
+            torrent.innerHTML = 'TOR';
 
             var streaming = document.createElement('a');
             streaming.setAttribute('class', classAttributes);
-            streaming.innerHTML = 'S';
+            streaming.innerHTML = 'STR';
 
             divLinks.appendChild(torrent);
             divLinks.appendChild(subtitles);
@@ -365,10 +367,26 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
     })();
 
-
     /* ---------------------------------------------------------------------------------------------- */
     /* ---------------------------------------------------------------------------------------------- */
     var TvsController = (function() {
+
+        // _firstThingsOnExtensionUpdate();
+
+        function _firstThingsOnExtensionUpdate () {
+            if (chrome.app.getDetails().version != '2.0.0') {
+                // chrome.storage.sync.get(null, function(itemsSet) {
+                //     keys = Object.keys(itemsSet);
+                //     chrome.storage.sync.clear();
+                //     var jsonfile = {};
+                //     for (var i = 0; i < keys.length; i++) {
+                //         var selectedValues = itemsSet[keys[i]];
+                //         jsonfile[i] = selectedValues;
+                //     }
+                //     chrome.storage.sync.set(jsonfile, function() {});
+                // });
+            }
+        }
 
         checkForNewEpisodes()
 
@@ -451,7 +469,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 }
             }
 
-            if (k.leftToSee >= 1) {
+            if (k.leftToSee == null || k.leftToSee > 0) {
+                console.log(k.leftToSee)
                 k.episodeAirdate = r.episodes[k.episodeNumber - 1].air_date;
                 k.tvsFinished = false;
                 k.seasFinished = false;

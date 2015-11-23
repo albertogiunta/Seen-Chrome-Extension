@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+    <title>Seen! Chrome Extension &#8226; Result Page</title>
+    <link href="http://d2v52k3cl9vedd.cloudfront.net/basscss/7.0.0/basscss.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:400' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/main.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/Options/options.css" media="screen"/>
+    <script type="text/javascript" src="/lib/themoviedb.js"></script>
+    <script type="text/javascript" src="/UtilityFunctions.js"></script>
+    <script type="text/javascript" src="/Options/options.js"></script>
+</head>
+
+<header class="mb1">
+    <div class="flex nowrap">
+        <div class="flex-auto header link">
+            <a id="author" href="https://github.com/albertogiunta" class="btn block p0 h6 lime">WHO DID DIS</a>
+        </div>
+        <div class="flex-auto header link">
+            <a id="review" href="#!" class="btn block p0 h6 purple">REVIEW</a>
+        </div>
+        <div class="flex-auto header link">
+            <a id="store" href="#!" class="btn block p0 h6 orange">PROBLEMS?</a>
+        </div>
+        <div class="flex-auto header link">
+            <a id="donation" href="#!" class="btn block p0 h6 aqua">BE AWESOME</a>
+        </div>
+    </div>
+</header>
+
+<body>
+   <div class="spacekeeper-top"></div>
+    
+    <p class="h3">Defaualt Links</p>
+    <p>These are the links that will be set by default for every new series.</p>
+    <p class="left m0 h5">Torrent</p>
+    <input id="torrent-input" class="h5 m0 p0" type="search">
+    <p class="left m0 h5">Streaming</p>
+    <input id="torrent-input" class="h5 m0 p0" type="search">
+    <p class="left m0 h5">Subtitles</p>
+    <input id="subtitles-input" class="h5 m0 p0" type="search">
+
+    <p class="h3">TV Series Sorting</p>
+    <div class="flex nowrap sortingcontainer mb2">
+        <div id="" class="flex-auto header">
+            <a id="alphabetical" class="sorting btn block p0 h6 link">ALPHABETICAL</a>
+        </div>
+        <!-- <div id="" class="flex-auto header">
+            <a id="popularity" href="#!" class="sorting btn block p0 h6 link">POPULARITY</a>
+        </div> -->
+        <div id="" class="flex-auto header">
+            <a id="lastaired" href="#!" class="sorting btn block p0 h6 link">LASTAIRED</a>
+        </div>
+    </div>
+
+    <a id="delete" href="/Popup/popup.html" class="btn block p0 h6 red">DELETE EVERYTHING</a>
+
+    <a id="add" href="/Popup/popup.html" class="btn h6 bold orange">DISCARD</a>
+    <a id="archived" href="/Popup/popup.html" class="btn h6 bold green">CONFIRM</a>
+</body>
+</html>

@@ -40,11 +40,11 @@ td {
     padding: 0px 2px  !important;
 }
 
-.left, .right, .double-left, .double-right, .options-btn {
+.single-left, .single-right, .double-left, .double-right, .options-btn {
     fill: #bfbfbf;
 }
 
-.left:hover, .right:hover, .double-left:hover, .double-right:hover, .options-btn:hover {
+.single-left:hover, .single-right:hover, .double-left:hover, .double-right:hover, .options-btn:hover {
     fill: #001F3F;
     -webkit-transition: .2s ease-in-out;
     cursor: pointer;
@@ -82,7 +82,7 @@ td {
 }
 
 .close {
-    fill: #FF4136;
+    fill: #ff851b;
 }
 
 .confirm {
