@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 var tvs = SortController.sort(items, keys, 'sortingMainpage')
                 for (var i = 0; i < keys.length; i++) {
                     var k = tvs[i];
-                    console.log(k.episodeAirdate)
 
                     var navBtns = _htmlNavigationBtns();
                     var mainText = _htmlMainTexts(k);
@@ -371,24 +370,52 @@ document.addEventListener('DOMContentLoaded', function(e) {
     /* ---------------------------------------------------------------------------------------------- */
     var TvsController = (function() {
 
-        // _firstThingsOnExtensionUpdate();
+        _firstThingsOnExtensionUpdate();    
 
         function _firstThingsOnExtensionUpdate () {
-            if (chrome.app.getDetails().version != '2.0.0') {
-                // chrome.storage.sync.get(null, function(itemsSet) {
-                //     keys = Object.keys(itemsSet);
-                //     chrome.storage.sync.clear();
-                //     var jsonfile = {};
-                //     for (var i = 0; i < keys.length; i++) {
-                //         var selectedValues = itemsSet[keys[i]];
-                //         jsonfile[i] = selectedValues;
-                //     }
-                //     chrome.storage.sync.set(jsonfile, function() {});
-                // });
+            if (localStorage.getItem('appVersion') != '2.0.0') {
+                chrome.storage.sync.get(null, function(itemsSet) {
+                    keys = Object.keys(itemsSet);
+                    chrome.storage.sync.clear();
+                    var jsonfile = {};
+                    for (var i = keys.length-1; i >= 0; i--) {
+                        var k = JSON.parse(itemsSet[keys[i]]);
+                        var date = k.additionDate == undefined ? new Date() : k.additionDate;
+                        console.log(k.additionDate, date)
+
+                        var selectedValues = JSON.stringify({'tvsName': k.tvsName, 
+                                                              'tvsId': k.tvsId, 
+                                                              'episodeNumber': k.episodeNumber,
+                                                              'seasonNumber': k.seasonNumber,
+                                                              'episodeName': k.episodeName,
+                                                              'seasEpisodes': k.seasEpisodes,
+                                                              'leftToSee': k.leftToSee,
+                                                              'episodeAirdate': k.episodeAirdate,
+                                                              'tvsStatus': k.tvsStatus,
+                                                              'seasFinished': k.seasFinished,
+                                                              'tvsFinished': k.tvsFinished,
+                                                              'subtitles': k.subtitles,
+                                                              'torrent': k.torrent,
+                                                              'streaming': k.streaming,
+                                                              'additionDate': date
+                                                            });
+                        jsonfile[k.tvsId] = selectedValues;
+                    }
+                    chrome.storage.sync.get(null, function(obj) {console.log(obj)});
+                    console.log(jsonfile)
+                    chrome.storage.sync.set(jsonfile, function() {
+                        console.log('1');
+                        checkForNewEpisodes()
+                        localStorage.setItem('appVersion', '2.0.0');
+                    });
+                });
+            } else {
+                console.log('2');
+                checkForNewEpisodes();;
             }
         }
 
-        checkForNewEpisodes()
+        // checkForNewEpisodes()
 
         /* ---------------------------------------------------------------------------------------------- */
         function checkForNewEpisodes() {
@@ -470,7 +497,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
             }
 
             if (k.leftToSee == null || k.leftToSee > 0) {
-                console.log(k.leftToSee)
                 k.episodeAirdate = r.episodes[k.episodeNumber - 1].air_date;
                 k.tvsFinished = false;
                 k.seasFinished = false;
@@ -593,6 +619,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             k.leftToSee = null;
             k.episodeAirdate = rEpisode.air_date;
             k.seasFinished = false;
+            // k.additionDate = k.additionDate;
 
             var airDate = Date.parse(rEpisode.air_date);
             var date = new Date();

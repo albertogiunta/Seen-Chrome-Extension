@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 SortController.toggleSorting(fieldName, 'alphabetical');
             });
 
-            // document.getElementById('popularity').addEventListener('click', function() {
-            //    SortController.toggleSorting(fieldName, 'popularity'); 
-            // });
+            document.getElementById('chronological').addEventListener('click', function() {
+               SortController.toggleSorting(fieldName, 'chronological'); 
+            });
 
             document.getElementById('lastaired').addEventListener('click', function() {
                 SortController.toggleSorting(fieldName, 'lastaired');

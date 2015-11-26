@@ -148,8 +148,7 @@ var StorageController = (function() {
 	}
 
 	function _getJson(r) {
-		var save = r.tvsId,
-			selectedValues = JSON.stringify({
+		var selectedValues = JSON.stringify({
 				'tvsName': r.tvsName,
 				'tvsId': r.tvsId,
 				'episodeNumber': parseInt(r.episodeNumber),
@@ -163,11 +162,13 @@ var StorageController = (function() {
 				'tvsFinished': r.tvsFinished,
 				'subtitles': r.subtitles,
 				'torrent': r.torrent,
-				'streaming': r.streaming
-			});
+				'streaming': r.streaming,
+				'additionDate': r.additionDate
+		});
+		console.log(r.additionDate)
 
 		var jsonfile = {};
-		jsonfile[save] = selectedValues;
+		jsonfile[r.tvsId] = selectedValues;
 		return jsonfile;
 	}
 
@@ -257,7 +258,6 @@ var SortController = (function() {
 
 	function sort(items, keys, fieldName) {
 	    var sorting = getSorting(fieldName)
-	    console.log(sorting)
 		var tvs = new Array();
 		if (keys != null) {
 			for (var i = 0; i < keys.length; i++) {
@@ -290,6 +290,10 @@ var SortController = (function() {
 			tvs.sort(function(a, b) {
 				return parseInt(b.year) - parseInt(a.year);
 			});
+		} else if (sorting == 'chronological') {
+			tvs.sort(function(a, b) {
+				return b.additionDate > a.additionDate;
+			});
 		}
     	return tvs;
 	}
@@ -310,6 +314,8 @@ var SortController = (function() {
             	btn = document.getElementById('lastaired');
             } else if (sorting == 'year') {
             	btn = document.getElementById('year');
+            } else if (sorting == 'chronological') {
+            	btn = document.getElementById('chronological');
             }
 
             for (var i = 0; i < sortingButtons.length; i++) {

@@ -303,19 +303,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	        }
 
         	var selectedValues = JSON.stringify({'tvsName': name, 
-                                                          'tvsId': id, 
-                                                          'episodeNumber': r.episodes[0].episode_number,
-                                                          'seasonNumber': r.episodes[0].season_number,
-                                                          'episodeName': r.episodes[0].name,
-                                                          'seasEpisodes': seasEpisodes,
-                                                          'leftToSee': leftToSee,
-                                                          'episodeAirdate': r.episodes[0].air_date,
-                                                          'tvsStatus': status,
-                                                          'seasFinished': false,
-                                                          'tvsFinished': false,
-                                                          'subtitles': subtitles,
-                                                          'torrent': torrent,
-                                                          'streaming': ''});
+                                                  'tvsId': id, 
+                                                  'episodeNumber': r.episodes[0].episode_number,
+                                                  'seasonNumber': r.episodes[0].season_number,
+                                                  'episodeName': r.episodes[0].name,
+                                                  'seasEpisodes': seasEpisodes,
+                                                  'leftToSee': leftToSee,
+                                                  'episodeAirdate': r.episodes[0].air_date,
+                                                  'tvsStatus': status,
+                                                  'seasFinished': false,
+                                                  'tvsFinished': false,
+                                                  'subtitles': subtitles,
+                                                  'torrent': torrent,
+                                                  'streaming': '',
+                                                  'additionDate': new Date()
+                                              });
 
 	        var jsonfile = {};
 	        jsonfile[id] = selectedValues;
