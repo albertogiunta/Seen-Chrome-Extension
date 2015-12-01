@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
             // <p class="bold h3 mb0 maintitle">American Horror Story</p>
             var pTvsName = document.createElement('p');
-            pTvsName.setAttribute('class', 'bold h3 mb0 maintitle ');
+            pTvsName.setAttribute('class', 'bold h4 mb0 maintitle ');
             // TODO shorten name with ... if longer than n chars
             pTvsName.innerHTML = k.tvsName;
 
@@ -184,9 +184,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
             var divLinks = document.createElement('div');
             divLinks.setAttribute('class', 'flex-first sm-col-0 mr2 mt1 navy');
             var classAttributes = 'btn block p0 m0 h5 link link-btn';
-            var subtitles = document.createElement('a');
-            subtitles.setAttribute('class', classAttributes);
-            subtitles.innerHTML = 'SUB';
+            
 
             var torrent = document.createElement('a');
             torrent.setAttribute('class', classAttributes);
@@ -196,9 +194,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
             streaming.setAttribute('class', classAttributes);
             streaming.innerHTML = 'STR';
 
+            var subtitles = document.createElement('a');
+            subtitles.setAttribute('class', classAttributes);
+            subtitles.innerHTML = 'SUB';
+
             divLinks.appendChild(torrent);
-            divLinks.appendChild(subtitles);
             divLinks.appendChild(streaming);
+            divLinks.appendChild(subtitles);
 
             return {
                 links: divLinks,
@@ -381,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     for (var i = keys.length-1; i >= 0; i--) {
                         var k = JSON.parse(itemsSet[keys[i]]);
                         var date = k.additionDate == undefined ? new Date() : k.additionDate;
-                        console.log(k.additionDate, date)
+                        // console.log(k.additionDate, date)
 
                         var selectedValues = JSON.stringify({'tvsName': k.tvsName, 
                                                               'tvsId': k.tvsId, 
@@ -401,18 +403,43 @@ document.addEventListener('DOMContentLoaded', function(e) {
                                                             });
                         jsonfile[k.tvsId] = selectedValues;
                     }
-                    chrome.storage.sync.get(null, function(obj) {console.log(obj)});
-                    console.log(jsonfile)
+                    // chrome.storage.sync.get(null, function(obj) {console.log(obj)});
+                    // console.log(jsonfile)
                     chrome.storage.sync.set(jsonfile, function() {
                         console.log('1');
                         checkForNewEpisodes()
                         localStorage.setItem('appVersion', '2.0.0');
+                        localStorage.setItem('sortingMainpage', 'alphabetical');
+                        localStorage.setItem('sortingResults', 'popularity');
+                        localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
+                        localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
+                        localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
                     });
                 });
             } else {
                 console.log('2');
+                // localStorage.setItem('appVersion', '2.0.0');
+                // if (isUnset('sortingMainpage')) {
+                //     localStorage.setItem('sortingMainpage', 'alphabetical');
+                // }
+                // if (isUnset('sortingResults')) {
+                //     localStorage.setItem('sortingResults', 'popularity');
+                // }
+                // if (isUnset('torrent-input')) {
+                //     localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
+                // }
+                // if (isUnset('streaming-input')) {
+                //     localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
+                // }
+                // if (isUnset('subtitles-input')) {
+                //     localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
+                // }
                 checkForNewEpisodes();;
             }
+        }
+
+        function isUnset(fieldName) {
+            return localStorage.getItem(fieldName) === null;
         }
 
         // checkForNewEpisodes()

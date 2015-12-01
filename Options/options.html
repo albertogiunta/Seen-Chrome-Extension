@@ -17,13 +17,13 @@
             <a id="author" href="https://github.com/albertogiunta" class="btn block p0 h6 lime">WHO DID DIS</a>
         </div>
         <div class="flex-auto header link">
-            <a id="review" href="#!" class="btn block p0 h6 purple">REVIEW</a>
+            <a id="review" href="https://chrome.google.com/webstore/detail/seen-tv-series-episode-tr/lkickecpgpegomhfjadelgeadepjijeh/reviews?hl=en" class="btn block p0 h6 purple">REVIEW</a>
         </div>
         <div class="flex-auto header link">
-            <a id="store" href="#!" class="btn block p0 h6 orange">PROBLEMS?</a>
+            <a id="store" href="https://chrome.google.com/webstore/detail/seen-tv-series-episode-tr/lkickecpgpegomhfjadelgeadepjijeh/support?hl=en" class="btn block p0 h6 orange">PROBLEMS?</a>
         </div>
         <div class="flex-auto header link">
-            <a id="donation" href="#!" class="btn block p0 h6 aqua">BE AWESOME</a>
+            <a id="donation" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7TLPHTCCCAES2" class="btn block p0 h6 aqua">BE AWESOME</a>
         </div>
     </div>
 </header>
@@ -31,31 +31,41 @@
 <body>
    <div class="spacekeeper-top"></div>
     
-    <p class="h3">Defaualt Links</p>
-    <p>These are the links that will be set by default for every new series.</p>
-    <p class="left m0 h5">Torrent</p>
+    <p class="h3 m0">Default Links</p>
+    <div class="gray">
+    <p class="h6 m0">These are the links that will be <b>set by default</b> for every new series.</p>
+    <p class="h6 mt1 mb1">They also work as <b>shared links</b> (means that if you change it here it will also change in every tv series that had it before).</p>
+    <p class="h6 m0">&#183; Use (N) for dynamic name</p>
+    <p class="h6 m0">&#183; Use (S) for dynamic season number</p>
+    <p class="h6 mb2">&#183; Use (E) for dynamic episode number</p>
+    </div>
+    <p class="left m0 h6 gray">Torrent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
     <input id="torrent-input" class="h5 m0 p0" type="search">
-    <p class="left m0 h5">Streaming</p>
-    <input id="torrent-input" class="h5 m0 p0" type="search">
-    <p class="left m0 h5">Subtitles</p>
+    <p class="left m0 h6 gray">Streaming&nbsp;</p>
+    <input id="streaming-input" class="h5 m0 p0" type="search">
+    <p class="left m0 h6 gray">Subtitles&nbsp;&nbsp;&nbsp;&nbsp;</p>
     <input id="subtitles-input" class="h5 m0 p0" type="search">
 
-    <p class="h3">TV Series Sorting</p>
+    <p class="h3 mt3">TV Series Sorting</p>
     <div class="flex nowrap sortingcontainer mb2">
         <div id="" class="flex-auto header">
-            <a id="alphabetical" class="sorting btn block p0 h6 link">ALPHABETICAL</a>
+            <a id="alphabetical" class="sorting btn block p0 h5 link">ALPHABETICAL</a>
         </div>
         <div id="" class="flex-auto header">
-            <a id="chronological" href="#!" class="sorting btn block p0 h6 link">CHRONOLOGICAL</a>
+            <a id="chronological" href="#!" class="sorting btn block p0 h5 link">CHRONOLOGICAL</a>
         </div>
         <div id="" class="flex-auto header">
-            <a id="lastaired" href="#!" class="sorting btn block p0 h6 link">LASTAIRED</a>
+            <a id="lastaired" href="#!" class="sorting btn block p0 h5 link">LASTAIRED</a>
         </div>
     </div>
 
-    <a id="delete" href="/Popup/popup.html" class="btn block p0 h6 red">DELETE EVERYTHING</a>
+    <a id="delete" href="/Popup/popup.html" class="btn block mt4 p0 h5 red">DELETE EVERYTHING</a>
 
-    <a id="add" href="/Popup/popup.html" class="btn h6 bold orange">DISCARD</a>
-    <a id="archived" href="/Popup/popup.html" class="btn h6 bold green">CONFIRM</a>
 </body>
+<footer>
+   <div class="footer flex nowrap border-top navy">
+        <a id="discard" href="/Popup/popup.html" class="left flex-auto btn h6 bold orange">DISCARD</a>
+        <a id="confirm" class="right flex-auto btn h6 bold green">CONFIRM</a>
+   </div>
+</footer>
 </html>

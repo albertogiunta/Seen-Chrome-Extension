@@ -1,7 +1,7 @@
 var SvgController = (function() {
 	
-	var arrowLeft = '<svg class="single-left" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="26px" height="45px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(15) rotate(59 9 10)"/> </g> <g id="Guides"> </g> </svg>';
-	var arrowRight = '<svg class="single-right" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="26px" height="45px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(-2)"/> </g> <g id="Guides"> </g> </svg>';
+	var arrowLeft = '<svg class="single-left" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="26px" height="35px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(15) rotate(59 9 10)"/> </g> <g id="Guides"> </g> </svg>';
+	var arrowRight = '<svg class="single-right" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="26px" height="35px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(-2)"/> </g> <g id="Guides"> </g> </svg>';
 	var doubleArrowLeft = '<svg class="double-right" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="10px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(15) rotate(59 9 10)"/> </g> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(40) rotate(59 9 10)"/> </g> <g id="Guides"> </g> </svg>';
 	var doubleArrowRight = '<svg class="double-left" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="10px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(-20)"/> </g> <g id="Layer_3"> <path d="M6,4l20,12L6,28V4 M6,2C5.7,2,5.3,2.1,5,2.3C4.4,2.6,4,3.3,4,4v24c0,0.7,0.4,1.4,1,1.7C5.3,29.9,5.7,30,6,30 c0.4,0,0.7-0.1,1-0.3l20-12c0.6-0.4,1-1,1-1.7c0-0.7-0.4-1.4-1-1.7L7,2.3C6.7,2.1,6.4,2,6,2L6,2z" transform="translate(5)"/> </g> <g id="Guides"> </g> </svg>';
 	var options = '<svg class="options-btn" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32; width: 20px; float: left; margin-top: 3px; margin-right: 5px" xml:space="preserve"> <style type="text/css"> .st0{fill-rule:evenodd;clip-rule:evenodd;}.st1{fill:#FFFFFF;}</style> <g id="Layer_3"> <g> <g> <path d="M17,4c0.6,0,1,0.4,1,1v1.2c1.3,0.3,2.4,0.8,3.5,1.5l0.9-0.9c0.2-0.2,0.5-0.3,0.7-0.3c0.3,0,0.5,0.1,0.7,0.3l1.4,1.4 c0.4,0.4,0.4,1,0,1.4l-0.9,0.9c0.7,1,1.2,2.2,1.5,3.5H27c0.6,0,1,0.4,1,1v2c0,0.6-0.4,1-1,1h-1.2c-0.3,1.3-0.8,2.4-1.5,3.5 l0.9,0.9c0.4,0.4,0.4,1,0,1.4l-1.4,1.4c-0.2,0.2-0.5,0.3-0.7,0.3c-0.3,0-0.5-0.1-0.7-0.3l-0.9-0.9c-1,0.7-2.2,1.2-3.5,1.5V27 c0,0.6-0.4,1-1,1h-2c-0.6,0-1-0.4-1-1v-1.2c-1.3-0.3-2.4-0.8-3.5-1.5l-0.9,0.9c-0.2,0.2-0.5,0.3-0.7,0.3c-0.3,0-0.5-0.1-0.7-0.3 l-1.4-1.4c-0.4-0.4-0.4-1,0-1.4l0.9-0.9c-0.7-1-1.2-2.2-1.5-3.5H5c-0.6,0-1-0.4-1-1v-2c0-0.6,0.4-1,1-1h1.2 c0.3-1.3,0.8-2.4,1.5-3.5L6.8,9.6c-0.4-0.4-0.4-1,0-1.4l1.4-1.4c0.2-0.2,0.5-0.3,0.7-0.3c0.3,0,0.5,0.1,0.7,0.3l0.9,0.9 c1-0.7,2.2-1.2,3.5-1.5V5c0-0.6,0.4-1,1-1H17 M17,2h-2c-1.5,0-2.8,1.2-3,2.7c-0.4,0.1-0.8,0.3-1.2,0.5c-0.5-0.4-1.2-0.7-1.9-0.7 c-0.8,0-1.6,0.3-2.1,0.9L5.4,6.8C4.8,7.4,4.5,8.1,4.5,8.9c0,0.7,0.2,1.4,0.7,1.9C5,11.2,4.8,11.6,4.7,12C3.2,12.2,2,13.4,2,15v2 c0,1.6,1.2,2.8,2.7,3c0.1,0.4,0.3,0.8,0.5,1.2c-0.4,0.5-0.7,1.2-0.7,1.9c0,0.8,0.3,1.6,0.9,2.1l1.4,1.4c0.6,0.6,1.3,0.9,2.1,0.9 c0.7,0,1.4-0.2,1.9-0.7c0.4,0.2,0.8,0.4,1.2,0.5c0.2,1.5,1.4,2.7,3,2.7h2c1.5,0,2.8-1.2,3-2.7c0.4-0.1,0.8-0.3,1.2-0.5 c0.5,0.4,1.2,0.7,1.9,0.7c0.8,0,1.6-0.3,2.1-0.9l1.4-1.4c0.6-0.6,0.9-1.3,0.9-2.1c0-0.7-0.2-1.4-0.7-1.9c0.2-0.4,0.4-0.8,0.5-1.2 c1.5-0.2,2.7-1.4,2.7-3v-2c0-1.6-1.2-2.8-2.7-3c-0.1-0.4-0.3-0.8-0.5-1.2c0.4-0.5,0.7-1.2,0.7-1.9c0-0.8-0.3-1.6-0.9-2.1 l-1.4-1.4c-0.6-0.6-1.3-0.9-2.1-0.9c-0.7,0-1.4,0.2-1.9,0.7C20.8,5,20.4,4.8,20,4.7C19.8,3.2,18.5,2,17,2L17,2z"/> </g> <g> <path d="M16,22.5c-3.6,0-6.5-2.9-6.5-6.5s2.9-6.5,6.5-6.5s6.5,2.9,6.5,6.5S19.6,22.5,16,22.5z M16,10.5c-3,0-5.5,2.5-5.5,5.5 s2.5,5.5,5.5,5.5c3,0,5.5-2.5,5.5-5.5S19,10.5,16,10.5z"/> </g> <g> <path d="M16,19.5c-1.9,0-3.5-1.6-3.5-3.5s1.6-3.5,3.5-3.5c1.9,0,3.5,1.6,3.5,3.5S17.9,19.5,16,19.5z M16,13.5 c-1.4,0-2.5,1.1-2.5,2.5s1.1,2.5,2.5,2.5c1.4,0,2.5-1.1,2.5-2.5S17.4,13.5,16,13.5z"/> </g> </g> </g> <g id="Guides"> </g> </svg>'
@@ -165,7 +165,7 @@ var StorageController = (function() {
 				'streaming': r.streaming,
 				'additionDate': r.additionDate
 		});
-		console.log(r.additionDate)
+		// console.log(r.additionDate)
 
 		var jsonfile = {};
 		jsonfile[r.tvsId] = selectedValues;
@@ -258,6 +258,7 @@ var SortController = (function() {
 
 	function sort(items, keys, fieldName) {
 	    var sorting = getSorting(fieldName)
+	    console.log(sorting)
 		var tvs = new Array();
 		if (keys != null) {
 			for (var i = 0; i < keys.length; i++) {
@@ -298,52 +299,85 @@ var SortController = (function() {
     	return tvs;
 	}
 
-	function toggleSorting(fieldName, sorting) {
-			if (sorting != null) { 
-				setSorting(fieldName, sorting);
+	function toggleSorting(fieldName, currentSorting, justChangeGraphics) {
+		// if (!justChangeGraphics) {
+		// 	console.log('1')
+		// 	if (currentSorting != null) {
+		// 		console.log('2')
+		// 		localStorage.setItem(fieldName, sorting) 
+		// 		// setSorting(fieldName, sorting);
+		// 		sorting = currentSorting;
+		// 		console.log(" aaa " + getSorting(fieldName))
+		// 	} else {
+		// 		console.log('3')
+		// 		sorting = getSorting(fieldName)
+		// 		console.log(sorting)
+		// 	}
+		// } else {
+		// 	console.log('4')
+		// 	sorting = currentSorting;
+		// }
+
+		var sorting;
+		if (currentSorting != null && !justChangeGraphics) {
+			if (!justChangeGraphics) {
+				setSorting(fieldName, currentSorting);
 			}
-			sorting = getSorting(fieldName)
-			var sortingButtons = document.getElementsByClassName('sorting');
-            var btn;
+			sorting = currentSorting;
+		} else if (currentSorting == null) {
+			sorting = getSorting(fieldName);
+		} else if (justChangeGraphics) {
+			sorting = currentSorting;
+		}
+		
+		var sortingButtons = document.getElementsByClassName('sorting');
+        var btn;
 
-            if (sorting == 'alphabetical') {
-            	btn = document.getElementById('alphabetical');
-            } else if (sorting == 'popularity') {
-            	btn = document.getElementById('popularity');
-            } else if (sorting == 'lastaired') {
-            	btn = document.getElementById('lastaired');
-            } else if (sorting == 'year') {
-            	btn = document.getElementById('year');
-            } else if (sorting == 'chronological') {
-            	btn = document.getElementById('chronological');
-            }
-
-            for (var i = 0; i < sortingButtons.length; i++) {
-            	sortingButtons[i].className += !sortingButtons[i].className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
-            } 
-            btn.className = btn.className.replace( /(?:^|\s)link(?!\S)/g , '' );
+        if (sorting == 'alphabetical') {
+        	btn = document.getElementById('alphabetical');
+        } else if (sorting == 'popularity') {
+        	btn = document.getElementById('popularity');
+        } else if (sorting == 'lastaired') {
+        	btn = document.getElementById('lastaired');
+        } else if (sorting == 'year') {
+        	btn = document.getElementById('year');
+        } else if (sorting == 'chronological') {
+        	btn = document.getElementById('chronological');
         }
 
-        function setSorting(fieldName, sorting) {
-            localStorage.setItem(fieldName, sorting);
-        }
+        for (var i = 0; i < sortingButtons.length; i++) {
+        	sortingButtons[i].className += !sortingButtons[i].className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
+        } 
+        btn.className = btn.className.replace( /(?:^|\s)link(?!\S)/g , '');
+    }
 
-        function getSorting(fieldName) {
-        	var alternativeSorting;
-        	if (fieldName == 'sortingResults') {
-        		alternativeSorting = 'popularity';
-        	} else if (fieldName == 'sortingMainpage') {
-        		alternativeSorting = 'alphabetical';
-        	}
+    function setSorting(fieldName, sorting) {
+        localStorage.setItem(fieldName, sorting);
+    }
 
-        	var sorting = localStorage.getItem(fieldName);
-    		return sorting != null ? sorting : alternativeSorting;
-        }
+    function getSorting(fieldName) {
+    	// var alternativeSorting;
+    	// if (fieldName == 'sortingResults') {
+    	// 	alternativeSorting = 'popularity';
+    	// } else if (fieldName == 'sortingMainpage') {
+    	// 	alternativeSorting = 'alphabetical';
+    	// }
 
-        return {
-        	sort: sort,
-        	toggleSorting: toggleSorting,
-        	setSorting: setSorting,
-        	getSorting: getSorting
-        }
+    	// var sorting = localStorage.getItem(fieldName);
+
+    	// if (sorting == 'undefined') {
+    	// 	setSorting(fieldName, alternativeSorting);
+    	// 	sorting = alternativeSorting;
+    	// }
+
+		// return sorting;
+		return localStorage.getItem(fieldName)
+    }
+
+    return {
+    	sort: sort,
+    	toggleSorting: toggleSorting,
+    	setSorting: setSorting,
+    	getSorting: getSorting
+    }
 })();

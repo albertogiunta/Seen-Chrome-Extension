@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var r; // variable for search results (return by theMovieDb)
 		
-		var fieldName = 'sortingResult';
-		SortController.toggleSorting(fieldName, null)
+		var fieldName = 'sortingResults';
+		SortController.toggleSorting(fieldName, null, false)
 		
 		_setGeneralListeners();
 
@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			    tvs[i].year = date ? date.substring(0,4) : "";	// set year
 			    tvs[i].popularity = r.results[i].popularity;
 			}
-			
 			return SortController.sort(tvs, null, fieldName);
 		}
 
@@ -148,17 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			};
 
 			document.getElementById('alphabetical').addEventListener('click', function() {
-				SortController.toggleSorting(fieldName, 'alphabetical')
+				SortController.toggleSorting(fieldName, 'alphabetical', false)
 				_refreshTable();
 			});
 
 			document.getElementById('popularity').addEventListener('click', function() {
-				SortController.toggleSorting(fieldName, 'popularity')		
+				SortController.toggleSorting(fieldName, 'popularity', false)		
 				_refreshTable();
 			});
 
 			document.getElementById('year').addEventListener('click', function() {
-				SortController.toggleSorting(fieldName, 'year')
+				SortController.toggleSorting(fieldName, 'year', false)
 				_refreshTable();
 			});
 		}
@@ -204,11 +203,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		// }
 
 		// function _setSorting(sorting) {
-		// 	localStorage.setItem("sortingResult", sorting);
+		// 	localStorage.setItem("sortingResults", sorting);
 		// }
 
 		// function _getSorting() {
-		// 	sorting = localStorage.getItem('sortingResult');
+		// 	sorting = localStorage.getItem('sortingResults');
 		// 	return sorting;
 		// }
 
@@ -285,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	        var r = JSON.parse(data);
 	        var subtitles = 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)';
            	var torrent = 'https://torrentz.eu/search?q=(N)+s(S)e(E)';
+           	var streaming = 'http://www.alluc.ee/stream/(N)+s(S)+e(E)'
 	        
 	        var seasEpisodes = r.episodes.length;
 
@@ -313,9 +313,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                                   'tvsStatus': status,
                                                   'seasFinished': false,
                                                   'tvsFinished': false,
-                                                  'subtitles': subtitles,
-                                                  'torrent': torrent,
-                                                  'streaming': '',
+                                                  'subtitles': localStorage.getItem('subtitles-input'),
+                                                  'torrent': localStorage.getItem('torrent-input'),
+                                                  'streaming': localStorage.getItem('streaming-input'),
                                                   'additionDate': new Date()
                                               });
 

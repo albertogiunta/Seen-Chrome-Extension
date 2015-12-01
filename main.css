@@ -6,6 +6,7 @@ body {
     overflow-y: scroll;
     overflow-x: scroll;
     font-family: 'Lato', sans-serif !important;
+    letter-spacing: 1px;
 }
 
 /* erase lines in table borders */

@@ -93,7 +93,7 @@ var OptionsDOMController = (function() {
 		divleftbtnscontainer.setAttribute('class', 'options ml2 mt1 mr1 col-1');
 		var archivetvs = SvgController.getSvgElement(SvgController.getArchive());
 		var deletetvs = SvgController.getSvgElement(SvgController.getTrash());
-		divleftbtnscontainer.appendChild(archivetvs);
+		// divleftbtnscontainer.appendChild(archivetvs);
 		divleftbtnscontainer.appendChild(deletetvs);
 
 		var divrightbtnscontainer = document.createElement('div');
@@ -147,10 +147,9 @@ var OptionsDOMController = (function() {
 			k.streaming = _getLink(document.getElementById('streaming-input '+ k.tvsId).value);
 
 			function _getLink (value) {
-				console.log(value)
-				if (value.slice(0, 4) != 'http' && value.length != 0) {
-					value = 'http://' + value;
-				}
+				// if (value.slice(0, 4) != 'http' && value.length != 0) {
+				// 	value = 'http://' + value;
+				// }
 				return value;
 			}
 
