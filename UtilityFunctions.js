@@ -165,7 +165,6 @@ var StorageController = (function() {
 				'streaming': r.streaming,
 				'additionDate': r.additionDate
 		});
-		// console.log(r.additionDate)
 
 		var jsonfile = {};
 		jsonfile[r.tvsId] = selectedValues;
@@ -300,24 +299,6 @@ var SortController = (function() {
 	}
 
 	function toggleSorting(fieldName, currentSorting, justChangeGraphics) {
-		// if (!justChangeGraphics) {
-		// 	console.log('1')
-		// 	if (currentSorting != null) {
-		// 		console.log('2')
-		// 		localStorage.setItem(fieldName, sorting) 
-		// 		// setSorting(fieldName, sorting);
-		// 		sorting = currentSorting;
-		// 		console.log(" aaa " + getSorting(fieldName))
-		// 	} else {
-		// 		console.log('3')
-		// 		sorting = getSorting(fieldName)
-		// 		console.log(sorting)
-		// 	}
-		// } else {
-		// 	console.log('4')
-		// 	sorting = currentSorting;
-		// }
-
 		var sorting;
 		if (currentSorting != null && !justChangeGraphics) {
 			if (!justChangeGraphics) {
@@ -356,21 +337,6 @@ var SortController = (function() {
     }
 
     function getSorting(fieldName) {
-    	// var alternativeSorting;
-    	// if (fieldName == 'sortingResults') {
-    	// 	alternativeSorting = 'popularity';
-    	// } else if (fieldName == 'sortingMainpage') {
-    	// 	alternativeSorting = 'alphabetical';
-    	// }
-
-    	// var sorting = localStorage.getItem(fieldName);
-
-    	// if (sorting == 'undefined') {
-    	// 	setSorting(fieldName, alternativeSorting);
-    	// 	sorting = alternativeSorting;
-    	// }
-
-		// return sorting;
 		return localStorage.getItem(fieldName)
     }
 

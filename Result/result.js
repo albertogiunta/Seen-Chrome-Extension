@@ -5,6 +5,26 @@ document.addEventListener('DOMContentLoaded', function() {
 	/* ---------------------------------------------------------------------------------------------- */
 	var DomController = (function() {
 
+		_getElements();
+
+        // Get header's links elements
+        function _getElements() {
+            document.getElementById('author').addEventListener('click', _createTabForLink);
+            document.getElementById('review').addEventListener('click', _createTabForLink);
+            document.getElementById('store').addEventListener('click', _createTabForLink);
+            document.getElementById('donation').addEventListener('click', _createTabForLink);
+        }
+
+        // Open tab on click
+        function _createTabForLink() {
+            if (this.href) {
+                chrome.tabs.create({
+                    active: true,
+                    url: this.href
+                });
+            }
+        }
+
 		var r; // variable for search results (return by theMovieDb)
 		
 		var fieldName = 'sortingResults';
@@ -110,19 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			return SortController.sort(tvs, null, fieldName);
 		}
 
-		// function _sortResults (tvs) {
-		// 	if (sorting == 'alphabetical') {
-		// 		tvs.sort(function(a, b) {
-		// 			return (a.name).localeCompare(b.name);
-		// 		});
-		// 	} else if (sorting == 'popularity') {
-		// 		tvs.sort(function(a, b) {
-		// 			return parseFloat(b.popularity) - parseFloat(a.popularity);
-		// 		});
-		// 	} 
-		// 	return tvs;
-		// }
-
+		
 		/* ---------------------------------------------------------------------------------------------- */
 		function _setGeneralListeners() {
 			
@@ -171,45 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				_setAdditionBtnsListeners();
 			}
 		}
-
-
-			// _toggleSorting(s == 'alphabetical', s == 'popularity', s == 'year');
-
-			// function _toggleSorting(isAlphabetical, isPopularity, isByYear) {
-			// 	var alph = document.getElementById('alphabetical');
-			// 	var pop = document.getElementById('popularity');
-			// 	var year = document.getElementById('year');
-
-			// 	if (isAlphabetical) {
-			// 		_toggler(alph, pop, year);
-			// 	} else if (isPopularity) {
-			// 		_toggler(pop, alph, year);
-			// 	} else if (isByYear) {
-			// 		_toggler(year, alph, pop);
-			// 	}
-
-			// 	function _toggler(toggle, untoggle1, untoggle2) {
-			// 		toggle.className = toggle.className.replace( /(?:^|\s)link(?!\S)/g , '' );
-			// 		untoggle1.className += !untoggle1.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
-			// 		untoggle2.className += !untoggle2.className.match(/(?:^|\s)link(?!\S)/) ? ' link' : '';
-			// 	}
-		
-			// }
-
-			// if the back button is clicked it will redirect to the main html page
-			// document.getElementById('close').addEventListener('click', function() {
-			//     window.location.href="/Popup/popup.html";
-			// });
-		// }
-
-		// function _setSorting(sorting) {
-		// 	localStorage.setItem("sortingResults", sorting);
-		// }
-
-		// function _getSorting() {
-		// 	sorting = localStorage.getItem('sortingResults');
-		// 	return sorting;
-		// }
 
 		function _setAdditionBtnsListeners() {
 			// listener for every "add to collection" button		

@@ -383,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     for (var i = keys.length-1; i >= 0; i--) {
                         var k = JSON.parse(itemsSet[keys[i]]);
                         var date = k.additionDate == undefined ? new Date() : k.additionDate;
-                        // console.log(k.additionDate, date)
 
                         var selectedValues = JSON.stringify({'tvsName': k.tvsName, 
                                                               'tvsId': k.tvsId, 
@@ -407,13 +406,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     // console.log(jsonfile)
                     chrome.storage.sync.set(jsonfile, function() {
                         console.log('1');
-                        checkForNewEpisodes()
                         localStorage.setItem('appVersion', '2.0.0');
                         localStorage.setItem('sortingMainpage', 'alphabetical');
                         localStorage.setItem('sortingResults', 'popularity');
                         localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
                         localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
                         localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
+                        checkForNewEpisodes()
                     });
                 });
             } else {

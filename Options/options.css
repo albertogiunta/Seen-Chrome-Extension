@@ -1,9 +1,9 @@
 body {
     width: 404px;
-    height: 520px;
+    height: 550px;
 }
 
-#delete {
+#delete, #tweet, #github {
     letter-spacing: .2em;
 }
 

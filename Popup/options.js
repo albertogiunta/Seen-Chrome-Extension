@@ -23,8 +23,7 @@ var OptionsDOMController = (function() {
 		var btns = _htmlButtons(k);
 		_htmlAppendElements(main, mainText, links, btns);
 
-		_setGeneralListeners(k, btns.archivetvs, btns.deletetvs, btns.confirmbtn, btns.deletechangesbtn, main, links, hiddenStuff);
-		// _setButtonsListeners(k, btns.seasonseen, btns.airedseen, btns.deletetvs);
+		_setGeneralListeners(k, btns.setasseen, btns.deletetvs, btns.confirmbtn, btns.deletechangesbtn, main, links, hiddenStuff);
 	}
 
 	function _hideStuff (main, hiddenStuff) {
@@ -91,9 +90,12 @@ var OptionsDOMController = (function() {
 
 		var divleftbtnscontainer = document.createElement('div');
 		divleftbtnscontainer.setAttribute('class', 'options ml2 mt1 mr1 col-1');
-		var archivetvs = SvgController.getSvgElement(SvgController.getArchive());
+		var setasseen = document.createElement('img');
+		setasseen.setAttribute('src', '/icons/setasseen.png');
+		setasseen.setAttribute('ALT', 'Set all episodes as seen');
+		setasseen.setAttribute('class', 'setasseen');
 		var deletetvs = SvgController.getSvgElement(SvgController.getTrash());
-		// divleftbtnscontainer.appendChild(archivetvs);
+		divleftbtnscontainer.appendChild(setasseen);
 		divleftbtnscontainer.appendChild(deletetvs);
 
 		var divrightbtnscontainer = document.createElement('div');
@@ -108,7 +110,7 @@ var OptionsDOMController = (function() {
 			rightbtns: divrightbtnscontainer,
 			confirmbtn: confirmbtn,
 			deletechangesbtn: deletechangesbtn,
-			archivetvs: archivetvs,
+			setasseen: setasseen,
 			deletetvs: deletetvs
 		}
 	}
@@ -123,18 +125,19 @@ var OptionsDOMController = (function() {
 
 	/* ---------------------------------------------------------------------------------------------- */
 
-	function _setGeneralListeners(k, archivetvs, deletetvs, confirmbtn, deletechangesbtn, main, links, hiddenStuff) {
+	function _setGeneralListeners(k, setasseen, deletetvs, confirmbtn, deletechangesbtn, main, links, hiddenStuff) {
 		
-		// document.getElementById('subtitles-input'+ k.tvsId).select();
-		
-		// deletetvs.addEventListener('click', function () {
-		// 	while (main.firstChild) {
-		// 		main.removeChild(main.firstChild);
-		// 	}
-		// 	for (i = 0; i < hiddenStuff.length; i++) {
-		// 		main.appendChild(hiddenStuff[i]);
-		// 	}
-		// });
+		setasseen.addEventListener('click', function () {
+			theMovieDb.tv.getById({"id": k.tvsId}, function(data) {
+				var r = JSON.parse(data);
+				k.tvsStatus = r.status;
+				theMovieDb.tvSeasons.getById({"id": k.tvsId, "season_number": ButtonsController.getLastSeasonNumber(r)}, function(data) {
+					ButtonsController.getLastAiredEpisodeInSeason(r, JSON.parse(data), k)
+				}, function(){
+				});
+			}, function(){
+			});
+		});
 
 		deletetvs.addEventListener('click', function () {
 			chrome.storage.sync.remove(k.tvsId, function() {});

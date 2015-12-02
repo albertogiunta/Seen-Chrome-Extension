@@ -73,8 +73,11 @@ td {
     width: 25px;
 }
 
-.archive {
-    fill: #7FDBFF;
+.setasseen {
+    margin: 2px 0 5px 4px;
+    cursor: pointer;
+    width: 17px;
+    height: 18px;
 }
 
 .trash {

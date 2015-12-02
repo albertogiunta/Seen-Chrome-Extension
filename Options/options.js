@@ -2,6 +2,28 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
     var SetListeners = (function() {
 
+        _getElements();
+
+        // Get header's links elements
+        function _getElements() {
+            document.getElementById('author').addEventListener('click', _createTabForLink);
+            document.getElementById('review').addEventListener('click', _createTabForLink);
+            document.getElementById('store').addEventListener('click', _createTabForLink);
+            document.getElementById('donation').addEventListener('click', _createTabForLink);
+            document.getElementById('tweet').addEventListener('click', _createTabForLink);
+            document.getElementById('github').addEventListener('click', _createTabForLink);
+        }
+
+        // Open tab on click
+        function _createTabForLink() {
+            if (this.href) {
+                chrome.tabs.create({
+                    active: true,
+                    url: this.href
+                });
+            }
+        }
+
         var fieldName = 'sortingMainpage'
         SortController.toggleSorting(fieldName, null, false);
         var sorting = SortController.getSorting(fieldName);
@@ -28,8 +50,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
             document.getElementById('confirm').addEventListener('click', function() {
                 SortController.setSorting('sortingMainpage', sorting, false)
                 
+                //  getting the value of the inserted links
                 var torrent = getLinks('torrent-input');
-                console.log(torrent)
                 var streaming = getLinks('streaming-input');
                 var subtitles = getLinks('subtitles-input');
 
@@ -46,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
                             k.subtitles = k.subtitles == localStorage.getItem('subtitles-input') ? subtitles : k.subtitles;
 
                             StorageController.setStorage(k, function() {
-                                console.log(k)
                                 setLinks('torrent-input', torrent)
                                 setLinks('streaming-input', streaming)
                                 setLinks('subtitles-input', subtitles)
@@ -65,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
     function fillLinks(fieldId) {
         var link = localStorage.getItem(fieldId)
         if (link != null) {
-            console.log(fieldId)
             document.getElementById(fieldId).value = link;
         }
     }
