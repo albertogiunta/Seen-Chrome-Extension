@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     url: this.href
                 });
             }
+            console.log(this.href)
         }
     })();
 
@@ -109,7 +110,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
             return {
                 btns: aside,
                 backbtn: backbtn,
-                nextbtn: nextbtn
+                doublebackbtn: doublebackbtn,
+                nextbtn: nextbtn,
+                doublenextbtn: doublenextbtn
             }
         }
 
@@ -262,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (linkStr) {
                     element.setAttribute('href', linkStr);
                 } else {
-                    element.className += ' inactive-link';
+                    element.className = "btn block p0 m0 h5 link-btn inactive-link"
                 }
             }
 
@@ -270,11 +273,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
             if (k.leftToSee != null) {
                 if (k.episodeNumber == 1 && k.seasonNumber == 1) {
                     navBtns.backbtn.setAttribute('data-disabled', true);
+                    navBtns.backbtn.firstElementChild.setAttribute('class', navBtns.backbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
+                    navBtns.doublebackbtn.firstElementChild.setAttribute('class', navBtns.doublebackbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
                 }
             } else if (k.episodeNumber == 1 && k.seasonNumber == 1) {
                 navBtns.backbtn.setAttribute('data-disabled', true);
+                navBtns.backbtn.firstElementChild.setAttribute('class', navBtns.backbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
+                navBtns.doublebackbtn.firstElementChild.setAttribute('class', navBtns.doublebackbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
             } else {
                 navBtns.nextbtn.setAttribute('data-disabled', true);
+                navBtns.nextbtn.firstElementChild.setAttribute('class', navBtns.nextbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
+                navBtns.doublenextbtn.firstElementChild.setAttribute('class', navBtns.doublenextbtn.firstElementChild.getAttribute('class') + ' inactive-btn'); 
                 // linkBtns.subtitles().setAttribute('data-disabled', true);
                 // linkBtns.torrent().setAttribute('data-disabled', true);
                 // linkBtns.streaming().setAttribute('data-disabled', true);
@@ -316,6 +325,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
                     incrBtns[i].addEventListener('click', _changeListener);
                     doubleIncrBtns[i].addEventListener('click', _changeListener);
+                } else {
+                    console.log('ciao')
+                    if (linkBtns[j+1] != undefined) {
+                        linkBtns[j].className = linkBtns[j].className == 'btn block p0 m0 h5 link link-btn' ? 'btn block p0 m0 h5 link-btn inactive-link' : linkBtns[j].className;
+                        linkBtns[j+1].className = linkBtns[j+1].className == 'btn block p0 m0 h5 link link-btn' ? 'btn block p0 m0 h5 link-btn inactive-link' : linkBtns[j+1].className;
+                        linkBtns[j+2].className = linkBtns[j+2].className == 'btn block p0 m0 h5 link link-btn' ? 'btn block p0 m0 h5 link-btn inactive-link' : linkBtns[j+2].className;
+                    }                    
                 }
                 j += 3
 
@@ -375,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
         _firstThingsOnExtensionUpdate();    
 
         function _firstThingsOnExtensionUpdate () {
-            if (localStorage.getItem('appVersion') != '2.0.0') {
+            if (localStorage.getItem('appVersion') != '2.0.0' && localStorage.getItem('appVersion') != '2.0.1') {
                 chrome.storage.sync.get(null, function(itemsSet) {
                     keys = Object.keys(itemsSet);
                     chrome.storage.sync.clear();
@@ -406,34 +422,36 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     // console.log(jsonfile)
                     chrome.storage.sync.set(jsonfile, function() {
                         console.log('1');
-                        localStorage.setItem('appVersion', '2.0.0');
+                        localStorage.setItem('appVersion', '2.0.1');
                         localStorage.setItem('sortingMainpage', 'alphabetical');
                         localStorage.setItem('sortingResults', 'popularity');
                         localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
-                        localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
-                        localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
+                        localStorage.setItem('streaming-input', 'https://www.alluc.ee/stream/(N)+s(S)+e(E)');
+                        localStorage.setItem('subtitles-input', 'https://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
                         checkForNewEpisodes()
                     });
                 });
-            } else {
+            } else if (localStorage.getItem('appVersion') == '2.0.0') {
                 console.log('2');
-                // localStorage.setItem('appVersion', '2.0.0');
-                // if (isUnset('sortingMainpage')) {
-                //     localStorage.setItem('sortingMainpage', 'alphabetical');
-                // }
-                // if (isUnset('sortingResults')) {
-                //     localStorage.setItem('sortingResults', 'popularity');
-                // }
-                // if (isUnset('torrent-input')) {
-                //     localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
-                // }
-                // if (isUnset('streaming-input')) {
-                //     localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
-                // }
-                // if (isUnset('subtitles-input')) {
-                //     localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
-                // }
-                checkForNewEpisodes();;
+                localStorage.setItem('appVersion', '2.0.1');
+                if (isUnset('sortingMainpage')) {
+                    localStorage.setItem('sortingMainpage', 'alphabetical');
+                }
+                if (isUnset('sortingResults')) {
+                    localStorage.setItem('sortingResults', 'popularity');
+                }
+                if (isUnset('torrent-input')) {
+                    localStorage.setItem('torrent-input', 'https://torrentz.eu/search?q=(N)+s(S)e(E)');
+                }
+                if (isUnset('streaming-input')) {
+                    localStorage.setItem('streaming-input', 'http://www.alluc.ee/stream/(N)+s(S)+e(E)');
+                }
+                if (isUnset('subtitles-input')) {
+                    localStorage.setItem('subtitles-input', 'http://www.opensubtitles.org/en/search/searchonlytvseries-on/season-(S)/episode-(E)/moviename-(N+)');
+                }
+                checkForNewEpisodes();
+            } else {
+                checkForNewEpisodes();
             }
         }
 

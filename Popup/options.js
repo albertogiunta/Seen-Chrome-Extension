@@ -150,9 +150,9 @@ var OptionsDOMController = (function() {
 			k.streaming = _getLink(document.getElementById('streaming-input '+ k.tvsId).value);
 
 			function _getLink (value) {
-				// if (value.slice(0, 4) != 'http' && value.length != 0) {
-				// 	value = 'http://' + value;
-				// }
+				if (value.slice(0, 4) != 'http' && value.length != 0) {
+					value = 'http://' + value;
+				}
 				return value;
 			}
 

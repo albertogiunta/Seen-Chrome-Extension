@@ -61,16 +61,24 @@ document.addEventListener('DOMContentLoaded', function(e) {
                     if (keys.length == 0) {
                         window.location.href = "/Popup/popup.html";
                     } else {
+                        function _getLink (value) {
+                            if (value.slice(0, 4) != 'http' && value.length != 0) {
+                                value = 'http://' + value;
+                            }
+                            return value;
+                        }
+                        
                         for (var i = keys.length-1; i >= 0; i--) {
                             var k = JSON.parse(itemsSet[keys[i]]);
-                            k.torrent = k.torrent == localStorage.getItem('torrent-input') ? torrent : k.torrent;
-                            k.streaming = k.streaming == localStorage.getItem('streaming-input') ? streaming : k.streaming;
-                            k.subtitles = k.subtitles == localStorage.getItem('subtitles-input') ? subtitles : k.subtitles;
+                            k.torrent = k.torrent == localStorage.getItem('torrent-input') ? _getLink(torrent) : k.torrent;
+                            k.streaming = k.streaming == localStorage.getItem('streaming-input') ? _getLink(streaming) : k.streaming;
+                            k.subtitles = k.subtitles == localStorage.getItem('subtitles-input') ? _getLink(subtitles) : k.subtitles;
+
 
                             StorageController.setStorage(k, function() {
-                                setLinks('torrent-input', torrent)
-                                setLinks('streaming-input', streaming)
-                                setLinks('subtitles-input', subtitles)
+                                setLinks('torrent-input', _getLink(torrent))
+                                setLinks('streaming-input', _getLink(streaming))
+                                setLinks('subtitles-input', _getLink(subtitles))
                                 window.location.href = "/Popup/popup.html";
                             });
                         }

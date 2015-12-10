@@ -3,9 +3,16 @@ body {
     height: 550px;
 }
 
-#delete, #tweet, #github {
-    letter-spacing: .2em;
+#tweet, #github {
+    letter-spacing: .1em !important;
+    word-spacing: 2px;
 }
+
+#delete {
+    text-align: center;
+    letter-spacing: 1em;
+}
+
 
 .spacekeeper-bottom {
     bottom: 0;
@@ -20,3 +27,4 @@ body {
     text-align:center;
     background-color: white;
 }
+

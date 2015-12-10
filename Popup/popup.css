@@ -44,22 +44,23 @@ td {
     fill: #bfbfbf;
 }
 
+
 .single-left:hover, .single-right:hover, .double-left:hover, .double-right:hover, .options-btn:hover {
     fill: #001F3F;
     -webkit-transition: .2s ease-in-out;
     cursor: pointer;
 }
 
-.inactive-btn, .inactive-btn:hover, .inactive-btn:focus {
-    color: #bfbfbf !important;
-    border-color: #bfbfbf !important;
-    box-shadow: none !important;
-    outline: none !important;
+.inactive-btn:hover, .inactive-btn:focus {
+    fill: #bfbfbf !important;
     cursor: default !important;
 }
 
 .inactive-link, .inactive-link:hover, .inactive-link:focus {
     color: #bfbfbf !important;
+    text-decoration: line-through;
+    -webkit-transition: none;
+    opacity: .5;
     cursor: default !important;
 }
 
